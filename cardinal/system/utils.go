@@ -2,12 +2,10 @@ package system
 
 import (
 	"fmt"
-
+	comp "oceanus-shard/component"
 	"pkg.world.dev/world-engine/cardinal"
 	"pkg.world.dev/world-engine/cardinal/search/filter"
 	"pkg.world.dev/world-engine/cardinal/types"
-
-	comp "oceanus-shard/component"
 )
 
 // queryTargetPlayer queries for the target player's entity ID and health component.
