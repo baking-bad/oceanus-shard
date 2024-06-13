@@ -31,6 +31,7 @@ func MustInitWorld(w *cardinal.World) {
 	Must(
 		cardinal.RegisterComponent[component.Player](w),
 		cardinal.RegisterComponent[component.Health](w),
+		cardinal.RegisterComponent[component.TileMap](w),
 	)
 
 	// Register messages (user action)

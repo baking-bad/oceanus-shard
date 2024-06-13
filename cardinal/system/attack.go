@@ -17,6 +17,8 @@ func AttackSystem(world cardinal.WorldContext) error {
 	return cardinal.EachMessage[msg.AttackPlayerMsg, msg.AttackPlayerMsgReply](
 		world,
 		func(attack cardinal.TxData[msg.AttackPlayerMsg]) (msg.AttackPlayerMsgReply, error) {
+			personaTag := attack.Tx.PersonaTag
+			fmt.Println(personaTag)
 			playerID, playerHealth, err := queryTargetPlayer(world, attack.Msg.TargetNickname)
 			if err != nil {
 				return msg.AttackPlayerMsgReply{}, fmt.Errorf("failed to inflict damage: %w", err)
