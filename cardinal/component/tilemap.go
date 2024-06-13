@@ -3,48 +3,52 @@ package component
 type TileType string
 type BuildingType string
 
+const MapWidth = 3
+const MapHeight = 3
+
 const (
 	Generic TileType = "Generic"
-	Wood             = "Wood"
-	Water            = "Water"
-	Stone            = "Stone"
+	Wood    TileType = "Wood"
+	Water   TileType = "Water"
+	Stone   TileType = "Stone"
 )
 
 const (
 	None           BuildingType = "None"
-	Main                        = "Main"
-	Woodcutter                  = "Woodcutter"
-	Quarry                      = "Quarry"
-	FishermanHut                = "FishermanHut"
-	Shipyard                    = "Shipyard"
-	Warehouse                   = "Warehouse"
-	UnitLimitHouse              = "UnitLimitHouse"
+	Main           BuildingType = "Main"
+	Woodcutter     BuildingType = "Woodcutter"
+	Quarry         BuildingType = "Quarry"
+	FishermanHut   BuildingType = "FishermanHut"
+	Shipyard       BuildingType = "Shipyard"
+	Warehouse      BuildingType = "Warehouse"
+	UnitLimitHouse BuildingType = "UnitLimitHouse"
 )
 
 type Tile struct {
 	Tile     TileType     `json:"tile"`
 	Building BuildingType `json:"building"`
-	X        int          `json:"x"`
-	Y        int          `json:"y"`
 }
 
-func GetDefaultTiles() *[]Tile {
-	tiles := make([]Tile, 8)
-
-	tiles[0] = Tile{Tile: Generic, Building: Warehouse, X: 0, Y: 0}
-	tiles[1] = Tile{Tile: Stone, Building: Quarry, X: 1, Y: 0}
-	tiles[2] = Tile{Tile: Wood, Building: FishermanHut, X: 2, Y: 0}
-	tiles[3] = Tile{Tile: Water, Building: UnitLimitHouse, X: 3, Y: 0}
-	tiles[4] = Tile{Tile: Generic, Building: Shipyard, X: 4, Y: 0}
-	tiles[5] = Tile{Tile: Generic, Building: None, X: 5, Y: 0}
-	tiles[6] = Tile{Tile: Generic, Building: Woodcutter, X: 6, Y: 0}
-	tiles[7] = Tile{Tile: Generic, Building: Main, X: 7, Y: 0}
+func GetDefaultTiles() *map[int]Tile {
+	tiles := map[int]Tile{
+		0: {Tile: Generic, Building: Warehouse},
+		1: {Tile: Stone, Building: Quarry},
+		2: {Tile: Wood, Building: FishermanHut},
+		3: {Tile: Water, Building: UnitLimitHouse},
+		4: {Tile: Generic, Building: Shipyard},
+		5: {Tile: Generic, Building: None},
+		6: {Tile: Water, Building: UnitLimitHouse},
+		7: {Tile: Generic, Building: Shipyard},
+		8: {Tile: Generic, Building: None},
+	}
 
 	return &tiles
 }
 
 type TileMap struct {
-	Tiles *[]Tile `json:"tiles"`
+	Tiles  *map[int]Tile `json:"tiles"`
+	Width  int           `json:"width"`
+	Height int           `json:"height"`
 }
 
 func (TileMap) Name() string {

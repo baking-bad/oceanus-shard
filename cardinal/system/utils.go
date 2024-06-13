@@ -3,8 +3,6 @@ package system
 import (
 	"fmt"
 	comp "oceanus-shard/component"
-	"pkg.world.dev/world-engine/cardinal/persona/component"
-
 	"pkg.world.dev/world-engine/cardinal"
 	"pkg.world.dev/world-engine/cardinal/search/filter"
 	"pkg.world.dev/world-engine/cardinal/types"
@@ -48,39 +46,4 @@ func queryTargetPlayer(world cardinal.WorldContext, targetNickname string) (type
 	}
 
 	return playerID, playerHealth, err
-}
-
-func querySignerComponentByPersona(world cardinal.WorldContext, targetPersonaName string) (types.EntityID, *component.SignerComponent, error) {
-	var signerEntityID types.EntityID
-	var signerEntity *component.SignerComponent
-	var err error
-	searchErr := cardinal.NewSearch().Entity(
-		filter.Exact(filter.Component[component.SignerComponent]())).Each(world,
-		func(id types.EntityID) bool {
-			signerEntity, err = cardinal.GetComponent[component.SignerComponent](world, id)
-
-			if err != nil {
-				return false
-			}
-
-			// Terminates the search if the player is found
-			if signerEntity.PersonaTag == targetPersonaName {
-				signerEntityID = id
-				return false
-			}
-
-			return true
-		})
-
-	if searchErr != nil {
-		return 0, nil, err
-	}
-	if err != nil {
-		return 0, nil, err
-	}
-	if signerEntityID == 0 {
-		return 0, nil, fmt.Errorf("signer component %q does not exist", targetPersonaName)
-	}
-
-	return signerEntityID, signerEntity, err
 }

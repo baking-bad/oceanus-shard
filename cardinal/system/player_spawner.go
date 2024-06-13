@@ -52,7 +52,7 @@ func PlayerSpawnerSystem(world cardinal.WorldContext) error {
 
 			id, err := cardinal.Create(world,
 				comp.Player{Nickname: create.Msg.Nickname},
-				comp.TileMap{Tiles: comp.GetDefaultTiles()},
+				comp.TileMap{Tiles: comp.GetDefaultTiles(), Width: comp.MapWidth, Height: comp.MapHeight},
 			)
 			if err != nil {
 				return msg.CreatePlayerResult{}, fmt.Errorf("error creating player: %w", err)
