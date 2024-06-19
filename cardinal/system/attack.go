@@ -2,7 +2,6 @@ package system
 
 import (
 	"fmt"
-
 	"pkg.world.dev/world-engine/cardinal"
 
 	comp "oceanus-shard/component"
@@ -17,7 +16,7 @@ func AttackSystem(world cardinal.WorldContext) error {
 	return cardinal.EachMessage[msg.AttackPlayerMsg, msg.AttackPlayerMsgReply](
 		world,
 		func(attack cardinal.TxData[msg.AttackPlayerMsg]) (msg.AttackPlayerMsgReply, error) {
-			playerID, playerHealth, err := queryTargetPlayer(world, attack.Msg.TargetNickname)
+			playerID, playerHealth, err := QueryTargetPlayer(world, attack.Msg.TargetNickname)
 			if err != nil {
 				return msg.AttackPlayerMsgReply{}, fmt.Errorf("failed to inflict damage: %w", err)
 			}

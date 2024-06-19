@@ -8,8 +8,8 @@ import (
 	"pkg.world.dev/world-engine/cardinal/types"
 )
 
-// queryTargetPlayer queries for the target player's entity ID and health component.
-func queryTargetPlayer(world cardinal.WorldContext, targetNickname string) (types.EntityID, *comp.Health, error) {
+// QueryTargetPlayer queries for the target player's entity ID and health component.
+func QueryTargetPlayer(world cardinal.WorldContext, targetNickname string) (types.EntityID, *comp.Health, error) {
 	var playerID types.EntityID
 	var playerHealth *comp.Health
 	var err error
