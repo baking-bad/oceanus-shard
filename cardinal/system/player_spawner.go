@@ -66,16 +66,15 @@ func PlayerSpawnerSystem(world cardinal.WorldContext) error {
 			mainBuildingID, err := cardinal.Create(world,
 				playerComponent,
 				comp.Building{
-					Level: building.Level,
-					Type: building.Type,
+					Level:           building.Level,
+					Type:            building.Type,
 					FarmingResource: building.FarmingResource,
-					FarmingSpeed: building.FarmingSpeed,
-					Effect: building.Effect,
-					EffectAmount: building.EffectAmount,
-					UnitLimit: building.UnitLimit,
+					FarmingSpeed:    building.FarmingSpeed,
+					Effect:          building.Effect,
+					EffectAmount:    building.EffectAmount,
+					UnitLimit:       building.UnitLimit,
 					StorageCapacity: building.StorageCapacity,
 				},
-				comp.GetBuilding(comp.Main),
 			)
 
 			if err != nil {
