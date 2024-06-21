@@ -32,39 +32,78 @@ func (Building) Name() string {
 	return "Building"
 }
 
+const (
+	InitialBuildingLevel        int     = 1
+	MainBuildingUnitLimit       int     = 5
+	MainBuildingStorageCapacity int     = 200
+	QuarryFarmingSpeed          float32 = 10.0
+	QuarryUnitLimit             int     = 0
+	QuarryStorageCapacity       int     = 200
+	FishermanHutFarmingSpeed    float32 = 8.0
+	FishermanHutUnitLimit       int     = 0
+	FishermanHutStorageCapacity int     = 150
+	ShipyardUnitLimit           int     = 100
+	ShipyardStorageCapacity     int     = 300
+)
+
 func GetBuilding(buildingType BuildingType) Building {
 	switch buildingType {
 	case Main:
 		return Building{
-			Level:           1,
+			Level:           InitialBuildingLevel,
 			Type:            Main,
-			UnitLimit:       5,
-			StorageCapacity: 200,
+			UnitLimit:       MainBuildingUnitLimit,
+			StorageCapacity: MainBuildingStorageCapacity,
 		}
 	case Quarry:
 		return Building{
-			Level:           1,
+			Level:           InitialBuildingLevel,
 			Type:            Quarry,
 			FarmingResource: Stone,
-			FarmingSpeed:    10.0,
-			UnitLimit:       0,
-			StorageCapacity: 200,
+			FarmingSpeed:    QuarryFarmingSpeed,
+			UnitLimit:       QuarryUnitLimit,
+			StorageCapacity: QuarryStorageCapacity,
 		}
 	case FishermanHut:
 		return Building{
-			Level:           1,
+			Level:           InitialBuildingLevel,
 			Type:            FishermanHut,
 			FarmingResource: Fish,
-			FarmingSpeed:    8.0,
-			UnitLimit:       0,
-			StorageCapacity: 150,
+			FarmingSpeed:    FishermanHutFarmingSpeed,
+			UnitLimit:       FishermanHutUnitLimit,
+			StorageCapacity: FishermanHutStorageCapacity,
 		}
 	case Shipyard:
 		return Building{
-			Level:           1,
+			Level:           InitialBuildingLevel,
 			Type:            Shipyard,
-			UnitLimit:       100,
-			StorageCapacity: 300,
+			UnitLimit:       ShipyardUnitLimit,
+			StorageCapacity: ShipyardStorageCapacity,
+		}
+
+	// todo: refactor
+	case Woodcutter:
+		return Building{
+			Level:           InitialBuildingLevel,
+			Type:            Shipyard,
+			UnitLimit:       ShipyardUnitLimit,
+			StorageCapacity: ShipyardStorageCapacity,
+		}
+		// todo: refactor
+	case UnitLimitHouse:
+		return Building{
+			Level:           InitialBuildingLevel,
+			Type:            Shipyard,
+			UnitLimit:       ShipyardUnitLimit,
+			StorageCapacity: ShipyardStorageCapacity,
+		}
+		// todo: refactor
+	case Warehouse:
+		return Building{
+			Level:           InitialBuildingLevel,
+			Type:            Shipyard,
+			UnitLimit:       ShipyardUnitLimit,
+			StorageCapacity: ShipyardStorageCapacity,
 		}
 	default:
 		return Building{

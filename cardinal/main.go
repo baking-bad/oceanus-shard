@@ -59,10 +59,6 @@ func MustInitWorld(w *cardinal.World) {
 		system.RegenSystem,
 		system.PlayerSpawnerSystem,
 	))
-
-	//Must(cardinal.RegisterInitSystems(w,
-	//	system.SpawnDefaultPlayersSystem,
-	//))
 }
 
 func Must(err ...error) {
