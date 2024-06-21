@@ -31,6 +31,8 @@ func MustInitWorld(w *cardinal.World) {
 	Must(
 		cardinal.RegisterComponent[component.Player](w),
 		cardinal.RegisterComponent[component.Health](w),
+		cardinal.RegisterComponent[component.Resource](w),
+		cardinal.RegisterComponent[component.Building](w),
 		cardinal.RegisterComponent[component.TileMap](w),
 	)
 
@@ -56,10 +58,6 @@ func MustInitWorld(w *cardinal.World) {
 		system.AttackSystem,
 		system.RegenSystem,
 		system.PlayerSpawnerSystem,
-	))
-
-	Must(cardinal.RegisterInitSystems(w,
-		system.SpawnDefaultPlayersSystem,
 	))
 }
 

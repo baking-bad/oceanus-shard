@@ -2,6 +2,7 @@ package system
 
 import (
 	"fmt"
+
 	"pkg.world.dev/world-engine/cardinal/search/filter"
 	"pkg.world.dev/world-engine/cardinal/types"
 
@@ -42,28 +43,53 @@ func PlayerSpawnerSystem(world cardinal.WorldContext) error {
 					return true
 				})
 			if err != nil {
-				return msg.CreatePlayerResult{}, fmt.Errorf("error creating player: %w", err)
+				return msg.CreatePlayerResult{Success: false}, fmt.Errorf("error creating player: %w", err)
 			}
 
 			if playerExist {
 				return msg.CreatePlayerResult{Success: false},
-					fmt.Errorf("error creating player, player with nickname %s already exist", create.Msg.Nickname)
+					fmt.Errorf("error creating player, player with nickname %s already exists", create.Msg.Nickname)
 			}
 
-			id, err := cardinal.Create(world,
-				comp.Player{Nickname: create.Msg.Nickname},
-				comp.TileMap{Tiles: comp.GetDefaultTiles(), Width: comp.MapWidth, Height: comp.MapHeight},
+			var playerComponent = comp.Player{Nickname: create.Msg.Nickname}
+
+			mapID, err := cardinal.Create(world,
+				playerComponent,
+				comp.TileMap{
+					Tiles:  comp.GetDefaultTiles(),
+					Width:  comp.MapWidth,
+					Height: comp.MapHeight,
+				},
 			)
+
+			var building = comp.GetBuilding(comp.Main)
+			mainBuildingID, err := cardinal.Create(world,
+				playerComponent,
+				comp.Building{
+					Level: building.Level,
+					Type: building.Type,
+					FarmingResource: building.FarmingResource,
+					FarmingSpeed: building.FarmingSpeed,
+					Effect: building.Effect,
+					EffectAmount: building.EffectAmount,
+					UnitLimit: building.UnitLimit,
+					StorageCapacity: building.StorageCapacity,
+				},
+				comp.GetBuilding(comp.Main),
+			)
+
 			if err != nil {
-				return msg.CreatePlayerResult{}, fmt.Errorf("error creating player: %w", err)
+				return msg.CreatePlayerResult{Success: false}, fmt.Errorf("error creating player: %w", err)
 			}
 
 			err = world.EmitEvent(map[string]any{
-				"event": "new_player",
-				"id":    id,
+				"event":          "new_player",
+				"mapID":          mapID,
+				"mainBuildingID": mainBuildingID,
 			})
+			world.CurrentTick()
 			if err != nil {
-				return msg.CreatePlayerResult{}, err
+				return msg.CreatePlayerResult{Success: false}, err
 			}
 			return msg.CreatePlayerResult{Success: true}, nil
 		})
