@@ -1,9 +1,9 @@
 package component
 
 type Tile struct {
-	ID       int          `json:"id"`
-	Tile     TileType     `json:"tile"`
-	Building BuildingType `json:"building"`
+	ID       int       `json:"id"`
+	Tile     TileType  `json:"tile"`
+	Building *Building `json:"building"`
 }
 
 type TileMap struct {
@@ -20,74 +20,63 @@ const MapWidth = 9
 const MapHeight = 5
 
 type TileType string
-type BuildingType string
 
 const (
-	Generic   TileType = "Generic"
-	Wood      TileType = "Wood"
-	Stone     TileType = "Stone"
-	Water     TileType = "Water"
-	Coastline TileType = "Coastline"
-)
-
-const (
-	None           BuildingType = "None"
-	Main           BuildingType = "Main"
-	Woodcutter     BuildingType = "Woodcutter"
-	Quarry         BuildingType = "Quarry"
-	FishermanHut   BuildingType = "FishermanHut"
-	Shipyard       BuildingType = "Shipyard"
-	Warehouse      BuildingType = "Warehouse"
-	UnitLimitHouse BuildingType = "UnitLimitHouse"
+	GenericTile   TileType = "Generic"
+	WoodTile      TileType = "Wood"
+	StoneTile     TileType = "Stone"
+	WaterTile     TileType = "Water"
+	CoastlineTile TileType = "Coastline"
 )
 
 func GetDefaultTiles() *[]Tile {
+	var mainBuilding = GetBuilding(Main)
 	tiles := []Tile{
-		{ID: Tile0, Tile: Coastline, Building: None},
-		{ID: Tile1, Tile: Coastline, Building: None},
-		{ID: Tile2, Tile: Coastline, Building: None},
-		{ID: Tile3, Tile: Coastline, Building: None},
-		{ID: Tile4, Tile: Coastline, Building: None},
-		{ID: Tile5, Tile: Generic, Building: None},
-		{ID: Tile6, Tile: Generic, Building: None},
-		{ID: Tile7, Tile: Generic, Building: None},
-		{ID: Tile8, Tile: Generic, Building: None},
-		{ID: Tile9, Tile: Generic, Building: None},
-		{ID: Tile10, Tile: Generic, Building: None},
-		{ID: Tile11, Tile: Generic, Building: None},
-		{ID: Tile12, Tile: Generic, Building: None},
-		{ID: Tile13, Tile: Generic, Building: None},
-		{ID: Tile14, Tile: Generic, Building: None},
-		{ID: Tile15, Tile: Generic, Building: None},
-		{ID: Tile16, Tile: Generic, Building: None},
-		{ID: Tile17, Tile: Generic, Building: None},
-		{ID: Tile18, Tile: Generic, Building: None},
-		{ID: Tile19, Tile: Generic, Building: None},
-		{ID: Tile20, Tile: Generic, Building: None},
-		{ID: Tile21, Tile: Generic, Building: None},
-		{ID: Tile22, Tile: Generic, Building: Main},
-		{ID: Tile23, Tile: Generic, Building: None},
-		{ID: Tile24, Tile: Stone, Building: None},
-		{ID: Tile25, Tile: Generic, Building: None},
-		{ID: Tile26, Tile: Generic, Building: None},
-		{ID: Tile27, Tile: Generic, Building: None},
-		{ID: Tile28, Tile: Generic, Building: None},
-		{ID: Tile29, Tile: Generic, Building: None},
-		{ID: Tile30, Tile: Generic, Building: None},
-		{ID: Tile31, Tile: Generic, Building: None},
-		{ID: Tile32, Tile: Generic, Building: None},
-		{ID: Tile33, Tile: Generic, Building: None},
-		{ID: Tile34, Tile: Generic, Building: None},
-		{ID: Tile35, Tile: Generic, Building: None},
-		{ID: Tile36, Tile: Generic, Building: None},
-		{ID: Tile37, Tile: Generic, Building: None},
-		{ID: Tile38, Tile: Generic, Building: None},
-		{ID: Tile39, Tile: Generic, Building: None},
-		{ID: Tile40, Tile: Generic, Building: None},
-		{ID: Tile41, Tile: Generic, Building: None},
-		{ID: Tile42, Tile: Generic, Building: None},
-		{ID: Tile43, Tile: Generic, Building: None},
-		{ID: Tile44, Tile: Wood, Building: None},
+		{ID: Tile0, Tile: CoastlineTile, Building: nil},
+		{ID: Tile1, Tile: CoastlineTile, Building: nil},
+		{ID: Tile2, Tile: CoastlineTile, Building: nil},
+		{ID: Tile3, Tile: CoastlineTile, Building: nil},
+		{ID: Tile4, Tile: CoastlineTile, Building: nil},
+		{ID: Tile5, Tile: GenericTile, Building: nil},
+		{ID: Tile6, Tile: GenericTile, Building: nil},
+		{ID: Tile7, Tile: GenericTile, Building: nil},
+		{ID: Tile8, Tile: GenericTile, Building: nil},
+		{ID: Tile9, Tile: GenericTile, Building: nil},
+		{ID: Tile10, Tile: GenericTile, Building: nil},
+		{ID: Tile11, Tile: GenericTile, Building: nil},
+		{ID: Tile12, Tile: GenericTile, Building: nil},
+		{ID: Tile13, Tile: GenericTile, Building: nil},
+		{ID: Tile14, Tile: GenericTile, Building: nil},
+		{ID: Tile15, Tile: GenericTile, Building: nil},
+		{ID: Tile16, Tile: GenericTile, Building: nil},
+		{ID: Tile17, Tile: GenericTile, Building: nil},
+		{ID: Tile18, Tile: GenericTile, Building: nil},
+		{ID: Tile19, Tile: GenericTile, Building: nil},
+		{ID: Tile20, Tile: GenericTile, Building: nil},
+		{ID: Tile21, Tile: GenericTile, Building: nil},
+		{ID: Tile22, Tile: GenericTile, Building: &mainBuilding},
+		{ID: Tile23, Tile: GenericTile, Building: nil},
+		{ID: Tile24, Tile: StoneTile, Building: nil},
+		{ID: Tile25, Tile: GenericTile, Building: nil},
+		{ID: Tile26, Tile: GenericTile, Building: nil},
+		{ID: Tile27, Tile: GenericTile, Building: nil},
+		{ID: Tile28, Tile: GenericTile, Building: nil},
+		{ID: Tile29, Tile: GenericTile, Building: nil},
+		{ID: Tile30, Tile: GenericTile, Building: nil},
+		{ID: Tile31, Tile: GenericTile, Building: nil},
+		{ID: Tile32, Tile: GenericTile, Building: nil},
+		{ID: Tile33, Tile: GenericTile, Building: nil},
+		{ID: Tile34, Tile: GenericTile, Building: nil},
+		{ID: Tile35, Tile: GenericTile, Building: nil},
+		{ID: Tile36, Tile: GenericTile, Building: nil},
+		{ID: Tile37, Tile: GenericTile, Building: nil},
+		{ID: Tile38, Tile: GenericTile, Building: nil},
+		{ID: Tile39, Tile: GenericTile, Building: nil},
+		{ID: Tile40, Tile: GenericTile, Building: nil},
+		{ID: Tile41, Tile: GenericTile, Building: nil},
+		{ID: Tile42, Tile: GenericTile, Building: nil},
+		{ID: Tile43, Tile: GenericTile, Building: nil},
+		{ID: Tile44, Tile: WoodTile, Building: nil},
 	}
 
 	return &tiles
