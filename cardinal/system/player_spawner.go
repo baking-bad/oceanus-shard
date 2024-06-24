@@ -62,7 +62,7 @@ func PlayerSpawnerSystem(world cardinal.WorldContext) error {
 				},
 			)
 
-			var building = comp.GetBuilding(comp.Main)
+			var building, _ = comp.GetBuilding(comp.Main)
 			mainBuildingID, err := cardinal.Create(world,
 				playerComponent,
 				comp.Building{
@@ -86,7 +86,6 @@ func PlayerSpawnerSystem(world cardinal.WorldContext) error {
 				"mapID":          mapID,
 				"mainBuildingID": mainBuildingID,
 			})
-			world.CurrentTick()
 			if err != nil {
 				return msg.CreatePlayerResult{Success: false}, err
 			}

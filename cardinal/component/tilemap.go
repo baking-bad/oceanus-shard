@@ -30,7 +30,7 @@ const (
 )
 
 func GetDefaultTiles() *[]Tile {
-	var mainBuilding = GetBuilding(Main)
+	var mainBuilding, _ = GetBuilding(Main)
 	tiles := []Tile{
 		{ID: Tile0, Tile: CoastlineTile, Building: nil},
 		{ID: Tile1, Tile: CoastlineTile, Building: nil},

@@ -1,5 +1,7 @@
 package component
 
+import "fmt"
+
 type BuildingType string
 type EffectsType string
 
@@ -46,7 +48,7 @@ const (
 	ShipyardStorageCapacity     int     = 300
 )
 
-func GetBuilding(buildingType BuildingType) Building {
+func GetBuilding(buildingType BuildingType) (Building, error) {
 	switch buildingType {
 	case Main:
 		return Building{
@@ -54,7 +56,7 @@ func GetBuilding(buildingType BuildingType) Building {
 			Type:            Main,
 			UnitLimit:       MainBuildingUnitLimit,
 			StorageCapacity: MainBuildingStorageCapacity,
-		}
+		}, nil
 	case Quarry:
 		return Building{
 			Level:           InitialBuildingLevel,
@@ -63,7 +65,7 @@ func GetBuilding(buildingType BuildingType) Building {
 			FarmingSpeed:    QuarryFarmingSpeed,
 			UnitLimit:       QuarryUnitLimit,
 			StorageCapacity: QuarryStorageCapacity,
-		}
+		}, nil
 	case FishermanHut:
 		return Building{
 			Level:           InitialBuildingLevel,
@@ -72,14 +74,14 @@ func GetBuilding(buildingType BuildingType) Building {
 			FarmingSpeed:    FishermanHutFarmingSpeed,
 			UnitLimit:       FishermanHutUnitLimit,
 			StorageCapacity: FishermanHutStorageCapacity,
-		}
+		}, nil
 	case Shipyard:
 		return Building{
 			Level:           InitialBuildingLevel,
 			Type:            Shipyard,
 			UnitLimit:       ShipyardUnitLimit,
 			StorageCapacity: ShipyardStorageCapacity,
-		}
+		}, nil
 
 	// todo: refactor
 	case Woodcutter:
@@ -88,7 +90,7 @@ func GetBuilding(buildingType BuildingType) Building {
 			Type:            Shipyard,
 			UnitLimit:       ShipyardUnitLimit,
 			StorageCapacity: ShipyardStorageCapacity,
-		}
+		}, nil
 		// todo: refactor
 	case UnitLimitHouse:
 		return Building{
@@ -96,7 +98,7 @@ func GetBuilding(buildingType BuildingType) Building {
 			Type:            Shipyard,
 			UnitLimit:       ShipyardUnitLimit,
 			StorageCapacity: ShipyardStorageCapacity,
-		}
+		}, nil
 		// todo: refactor
 	case Warehouse:
 		return Building{
@@ -104,13 +106,13 @@ func GetBuilding(buildingType BuildingType) Building {
 			Type:            Shipyard,
 			UnitLimit:       ShipyardUnitLimit,
 			StorageCapacity: ShipyardStorageCapacity,
-		}
+		}, nil
 	default:
 		return Building{
 			Level:           0,
 			Type:            buildingType,
 			UnitLimit:       0,
 			StorageCapacity: 0,
-		}
+		}, fmt.Errorf("%s is invalid building type", buildingType)
 	}
 }
