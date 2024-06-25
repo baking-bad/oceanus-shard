@@ -53,24 +53,20 @@ func PlayerSpawnerSystem(world cardinal.WorldContext) error {
 
 			var playerComponent = comp.Player{Nickname: create.Msg.Nickname}
 
-			var resources []comp.Resource
-			for _, resourceType := range comp.GetAllResourceTypes() {
-				var resource = comp.Resource{
+			resources := make([]comp.Resource, len(comp.GetAllResourceTypes()))
+			for i, resourceType := range comp.GetAllResourceTypes() {
+				resources[i] = comp.Resource{
 					Type:   resourceType,
 					Amount: 0,
 				}
-
-				resources = append(resources, resource)
 			}
 
-			var effects []comp.Effect
-			for _, effectType := range comp.GetAllEffectTypes() {
-				var effect = comp.Effect{
+			effects := make([]comp.Effect, len(comp.GetAllEffectTypes()))
+			for i, effectType := range comp.GetAllEffectTypes() {
+				effects[i] = comp.Effect{
 					Type:   effectType,
 					Amount: 0,
 				}
-
-				effects = append(effects, effect)
 			}
 
 			mapID, err := cardinal.Create(world,

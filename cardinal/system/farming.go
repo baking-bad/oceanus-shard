@@ -1,6 +1,8 @@
 package system
 
 import (
+	"time"
+
 	"pkg.world.dev/world-engine/cardinal"
 	"pkg.world.dev/world-engine/cardinal/search/filter"
 	"pkg.world.dev/world-engine/cardinal/types"
@@ -29,7 +31,8 @@ func FarmingSystem(world cardinal.WorldContext) error {
 
 			for i := range playerResources.Resources {
 				if playerResources.Resources[i].Type == farmingComponent.Type {
-					playerResources.Resources[i].Amount += farmingComponent.Speed * float32(constants.TickRate.Seconds()) / 60
+					playerResources.Resources[i].Amount +=
+						farmingComponent.Speed * float32(constants.TickRate.Seconds()) / float32(time.Minute.Seconds())
 
 					if err := cardinal.SetComponent[comp.PlayerResources](world, playerEntityID, playerResources); err != nil {
 						return true

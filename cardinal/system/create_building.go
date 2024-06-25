@@ -15,24 +15,16 @@ func CreateBuildingSystem(world cardinal.WorldContext) error {
 	return cardinal.EachMessage[msg.CreateBuildingMsg, msg.CreateBuildingResult](
 		world,
 		func(request cardinal.TxData[msg.CreateBuildingMsg]) (msg.CreateBuildingResult, error) {
-			mapEntityID, playerMap, err := QueryComponent[comp.TileMap](
+			mapEntityID, playerMap, _ := QueryComponent[comp.TileMap](
 				world,
 				request.Tx.PersonaTag,
 				filter.Component[comp.Player](),
 				filter.Component[comp.TileMap](),
 			)
-			if err != nil {
-				return msg.CreateBuildingResult{Success: false}, fmt.Errorf("can't get player map %w", err)
-			}
 
-			var building comp.Building
-			building, err = comp.GetBuilding(comp.BuildingType(request.Msg.BuildingType))
-
-			if err != nil {
-				return msg.CreateBuildingResult{Success: false}, fmt.Errorf("failed to create %s: %w", request.Msg.BuildingType, err)
-			}
-
+			building, _ := comp.GetBuilding(comp.BuildingType(request.Msg.BuildingType))
 			tiles := *playerMap.Tiles
+
 			if request.Msg.TileIndex < 0 || request.Msg.TileIndex >= len(tiles) {
 				return msg.CreateBuildingResult{Success: false}, fmt.Errorf("index of tiles out of range")
 			}
@@ -41,12 +33,13 @@ func CreateBuildingSystem(world cardinal.WorldContext) error {
 			if tile.Building == nil {
 				tile.Building = &building
 			} else {
-				return msg.CreateBuildingResult{Success: false}, fmt.Errorf("failed to create building, this tile already have another building")
+				return msg.CreateBuildingResult{Success: false},
+					fmt.Errorf("failed to create building, this tile already have another building")
 			}
 
 			player, _ := cardinal.GetComponent[comp.Player](world, mapEntityID)
 
-			if err := cardinal.SetComponent[comp.TileMap](world, mapEntityID, playerMap); err != nil {
+			if err := cardinal.SetComponent(world, mapEntityID, playerMap); err != nil {
 				return msg.CreateBuildingResult{Success: false}, fmt.Errorf("failed to create building: %w", err)
 			}
 
@@ -67,8 +60,8 @@ func CreateBuildingSystem(world cardinal.WorldContext) error {
 					Type:  building.Farming.Type,
 					Speed: building.Farming.Speed,
 				}
-				cardinal.AddComponentTo[comp.Farming](world, playerEntityID)
-				cardinal.SetComponent(world, playerEntityID, farmingComponent)
+				_ = cardinal.AddComponentTo[comp.Farming](world, playerEntityID)
+				_ = cardinal.SetComponent(world, playerEntityID, farmingComponent)
 			}
 
 			if building.Effect != nil {
@@ -76,8 +69,8 @@ func CreateBuildingSystem(world cardinal.WorldContext) error {
 					Type:   building.Effect.Type,
 					Amount: building.Effect.Amount,
 				}
-				cardinal.AddComponentTo[comp.Effect](world, playerEntityID)
-				cardinal.SetComponent(world, playerEntityID, effectComponent)
+				_ = cardinal.AddComponentTo[comp.Effect](world, playerEntityID)
+				_ = cardinal.SetComponent(world, playerEntityID, effectComponent)
 			}
 
 			return msg.CreateBuildingResult{Success: true}, nil

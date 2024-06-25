@@ -66,7 +66,7 @@ func GetDefaultTiles() *[]Tile {
 		{Tile: GenericTile, Building: nil},
 		{Tile: GenericTile, Building: nil},
 		{Tile: GenericTile, Building: nil},
-		{Tile: GenericTile, Building: nil},
+		{Tile: CoastlineTile, Building: nil},
 		{Tile: GenericTile, Building: nil},
 		{Tile: GenericTile, Building: nil},
 		{Tile: GenericTile, Building: nil},

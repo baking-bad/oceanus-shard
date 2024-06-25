@@ -17,18 +17,18 @@ type BuildingInfoResponse struct {
 	Farming   *comp.Farming     `json:"farming,omitempty"`
 }
 
-func AllBuildings(world cardinal.WorldContext, req *BuildingsInfoRequest) (*[]BuildingInfoResponse, error) {
-	var buildings []BuildingInfoResponse
-	for _, buildingType := range comp.GetAllBuildingTypes() {
+func AllBuildings(_ cardinal.WorldContext, _ *BuildingsInfoRequest) (*[]BuildingInfoResponse, error) {
+	buildings := make([]BuildingInfoResponse, len(comp.GetAllBuildingTypes()))
+	for i, buildingType := range comp.GetAllBuildingTypes() {
 		buildingConf := comp.BuildingConfigs[buildingType]
 
-		buildings = append(buildings, BuildingInfoResponse{
+		buildings[i] = BuildingInfoResponse{
 			Building:  buildingType,
 			TileType:  buildingConf.TileType,
 			Resources: buildingConf.Resources,
 			Effect:    buildingConf.Effect,
 			Farming:   buildingConf.Farming,
-		})
+		}
 	}
 	return &buildings, nil
 }

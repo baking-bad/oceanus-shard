@@ -10,7 +10,11 @@ import (
 	"pkg.world.dev/world-engine/cardinal/types"
 )
 
-func QueryComponent[T types.Component](world cardinal.WorldContext, targetNickname string, components ...filter.ComponentWrapper) (types.EntityID, *T, error) {
+func QueryComponent[T types.Component](
+	world cardinal.WorldContext,
+	targetNickname string,
+	components ...filter.ComponentWrapper,
+) (types.EntityID, *T, error) {
 	var entityID types.EntityID
 	var targetComponent *T
 	var err error
