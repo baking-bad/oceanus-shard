@@ -44,19 +44,35 @@ func CreateBuildingSystem(world cardinal.WorldContext) error {
 				return msg.CreateBuildingResult{Success: false}, fmt.Errorf("failed to create building: %w", err)
 			}
 
-			_, err = cardinal.Create(world,
+			playerEntityID, _ := cardinal.Create(world,
 				player,
 				comp.Building{
 					Level:           building.Level,
 					Type:            building.Type,
-					FarmingResource: building.FarmingResource,
-					FarmingSpeed:    building.FarmingSpeed,
+					Farming:         building.Farming,
 					Effect:          building.Effect,
-					EffectAmount:    building.EffectAmount,
 					UnitLimit:       building.UnitLimit,
 					StorageCapacity: building.StorageCapacity,
 				},
 			)
+
+			if building.Farming != nil {
+				farmingComponent := &comp.Farming{
+					Type:  building.Farming.Type,
+					Speed: building.Farming.Speed,
+				}
+				cardinal.AddComponentTo[comp.Farming](world, playerEntityID)
+				cardinal.SetComponent(world, playerEntityID, farmingComponent)
+			}
+
+			if building.Effect != nil {
+				effectComponent := &comp.Effect{
+					Type:   building.Effect.Type,
+					Amount: building.Effect.Amount,
+				}
+				cardinal.AddComponentTo[comp.Effect](world, playerEntityID)
+				cardinal.SetComponent(world, playerEntityID, effectComponent)
+			}
 
 			return msg.CreateBuildingResult{Success: true}, nil
 		})

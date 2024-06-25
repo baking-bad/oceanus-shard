@@ -10,9 +10,19 @@ const (
 	Cotton ResourceType = "Cotton"
 )
 
+func GetAllResourceTypes() []ResourceType {
+	return []ResourceType{
+		Wood,
+		Stone,
+		Fish,
+		Iron,
+		Cotton,
+	}
+}
+
 type Resource struct {
 	Type   ResourceType `json:"type"`
-	Amount int          `json:"amount"`
+	Amount float32      `json:"amount"`
 }
 
 func (Resource) Name() string {

@@ -3,7 +3,6 @@ package component
 import "fmt"
 
 type BuildingType string
-type EffectsType string
 
 const (
 	Main           BuildingType = "Main"
@@ -15,17 +14,23 @@ const (
 	UnitLimitHouse BuildingType = "UnitLimitHouse"
 )
 
-const (
-	Ship EffectsType = "Ship"
-)
+func GetAllBuildingTypes() []BuildingType {
+	return []BuildingType{
+		Main,
+		Woodcutter,
+		Quarry,
+		FishermanHut,
+		Shipyard,
+		Warehouse,
+		UnitLimitHouse,
+	}
+}
 
 type Building struct {
 	Level           int          `json:"level"`
 	Type            BuildingType `json:"type"`
-	FarmingResource ResourceType `json:"farmingResource,omitempty"`
-	FarmingSpeed    float32      `json:"farmingSpeed,omitempty"`
-	Effect          EffectsType  `json:"effect,omitempty"`
-	EffectAmount    int          `json:"effectAmount,omitempty"`
+	Farming         *Farming     `json:"farming,omitempty"`
+	Effect          *Effect      `json:"effect,omitempty"`
 	UnitLimit       int          `json:"unitLimit"`
 	StorageCapacity int          `json:"storageCapacity"`
 }
@@ -34,78 +39,115 @@ func (Building) Name() string {
 	return "Building"
 }
 
-const (
-	InitialBuildingLevel        int     = 1
-	MainBuildingUnitLimit       int     = 5
-	MainBuildingStorageCapacity int     = 200
-	QuarryFarmingSpeed          float32 = 10.0
-	QuarryUnitLimit             int     = 0
-	QuarryStorageCapacity       int     = 200
-	FishermanHutFarmingSpeed    float32 = 8.0
-	FishermanHutUnitLimit       int     = 0
-	FishermanHutStorageCapacity int     = 150
-	ShipyardUnitLimit           int     = 100
-	ShipyardStorageCapacity     int     = 300
-)
+type BuildingConstants struct {
+	UnitLimit       int
+	StorageCapacity int
+	Resources       []Resource
+	Farming         *Farming
+	Effect          *Effect
+	TileType        TileType
+}
+
+var BuildingConfigs = map[BuildingType]BuildingConstants{
+	Main: {
+		Resources:       []Resource{},
+		UnitLimit:       5,
+		StorageCapacity: 200,
+		TileType:        GenericTile,
+	},
+	Woodcutter: {
+		Resources: []Resource{},
+		Farming: &Farming{
+			Type:  Wood,
+			Speed: 5,
+		},
+		TileType: GenericTile,
+	},
+	Quarry: {
+		Resources: []Resource{},
+		Farming: &Farming{
+			Type:  Stone,
+			Speed: 10.0,
+		},
+		TileType: GenericTile,
+	},
+	FishermanHut: {
+		Resources: []Resource{
+			{Type: Wood, Amount: 50},
+			{Type: Stone, Amount: 50},
+		},
+		Farming: &Farming{
+			Type:  Fish,
+			Speed: 5,
+		},
+		TileType: GenericTile,
+	},
+	Shipyard: {
+		Resources: []Resource{
+			{Type: Wood, Amount: 100},
+			{Type: Stone, Amount: 100},
+		},
+		Effect: &Effect{
+			Type:   Raft,
+			Amount: 2,
+		},
+		TileType: GenericTile,
+	},
+}
 
 func GetBuilding(buildingType BuildingType) (Building, error) {
+	config := BuildingConfigs[buildingType]
+
 	switch buildingType {
 	case Main:
 		return Building{
-			Level:           InitialBuildingLevel,
-			Type:            Main,
-			UnitLimit:       MainBuildingUnitLimit,
-			StorageCapacity: MainBuildingStorageCapacity,
+			Level:           1,
+			Type:            buildingType,
+			UnitLimit:       config.UnitLimit,
+			StorageCapacity: config.StorageCapacity,
 		}, nil
 	case Quarry:
 		return Building{
-			Level:           InitialBuildingLevel,
-			Type:            Quarry,
-			FarmingResource: Stone,
-			FarmingSpeed:    QuarryFarmingSpeed,
-			UnitLimit:       QuarryUnitLimit,
-			StorageCapacity: QuarryStorageCapacity,
+			Level:           1,
+			Type:            buildingType,
+			Farming:         config.Farming,
+			UnitLimit:       config.UnitLimit,
+			StorageCapacity: config.StorageCapacity,
 		}, nil
 	case FishermanHut:
 		return Building{
-			Level:           InitialBuildingLevel,
-			Type:            FishermanHut,
-			FarmingResource: Fish,
-			FarmingSpeed:    FishermanHutFarmingSpeed,
-			UnitLimit:       FishermanHutUnitLimit,
-			StorageCapacity: FishermanHutStorageCapacity,
+			Level:   1,
+			Type:    buildingType,
+			Farming: config.Farming,
 		}, nil
 	case Shipyard:
 		return Building{
-			Level:           InitialBuildingLevel,
-			Type:            Shipyard,
-			UnitLimit:       ShipyardUnitLimit,
-			StorageCapacity: ShipyardStorageCapacity,
+			Level:  1,
+			Type:   buildingType,
+			Effect: config.Effect,
 		}, nil
 
-	// todo: refactor
 	case Woodcutter:
 		return Building{
-			Level:           InitialBuildingLevel,
-			Type:            Shipyard,
-			UnitLimit:       ShipyardUnitLimit,
-			StorageCapacity: ShipyardStorageCapacity,
+			Level:   1,
+			Type:    buildingType,
+			Farming: config.Farming,
 		}, nil
 		// todo: refactor
 	case UnitLimitHouse:
 		return Building{
-			Level:           InitialBuildingLevel,
-			Type:            Shipyard,
-			UnitLimit:       ShipyardUnitLimit,
-			StorageCapacity: ShipyardStorageCapacity,
+			Level:           1,
+			Type:            buildingType,
+			UnitLimit:       config.UnitLimit,
+			StorageCapacity: config.StorageCapacity,
 		}, nil
 		// todo: refactor
 	case Warehouse:
 		return Building{
-			Level:           InitialBuildingLevel,
-			Type:            Shipyard,
-			UnitLimit:       ShipyardUnitLimit,
-			StorageCapacity: ShipyardStorageCapacity,
+			Level:           1,
+			Type:            buildingType,
+			UnitLimit:       config.UnitLimit,
+			StorageCapacity: config.StorageCapacity,
 		}, nil
 	default:
 		return Building{

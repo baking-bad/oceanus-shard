@@ -55,7 +55,7 @@ func QueryPlayerMap(world cardinal.WorldContext, targetNickname string) (types.E
 	var playerTileMap *comp.TileMap
 	var err error
 	searchErr := cardinal.NewSearch().Entity(
-		filter.Exact(filter.Component[comp.Player](), filter.Component[comp.TileMap]())).Each(world,
+		filter.Contains(filter.Component[comp.Player](), filter.Component[comp.TileMap]())).Each(world,
 		func(id types.EntityID) bool {
 			var player *comp.Player
 			player, err = cardinal.GetComponent[comp.Player](world, id)
@@ -83,8 +83,47 @@ func QueryPlayerMap(world cardinal.WorldContext, targetNickname string) (types.E
 		return 0, nil, err
 	}
 	if playerTileMap == nil {
-		return 0, nil, fmt.Errorf("player %q does not exist", targetNickname)
+		return 0, nil, fmt.Errorf("player tileMap %q does not exist", targetNickname)
 	}
 
 	return entityID, playerTileMap, err
+}
+
+func QueryPlayerResources(world cardinal.WorldContext, targetNickname string) (types.EntityID, *comp.PlayerResources, error) {
+	var entityID types.EntityID
+	var playerResources *comp.PlayerResources
+	var err error
+
+	searchErr := cardinal.NewSearch().Entity(
+		filter.Contains(filter.Component[comp.Player](), filter.Component[comp.PlayerResources]())).Each(world,
+		func(id types.EntityID) bool {
+			var player *comp.Player
+			player, err = cardinal.GetComponent[comp.Player](world, id)
+			if err != nil {
+				return false
+			}
+
+			// Terminates the search if the player is found
+			if player.Nickname == targetNickname {
+				entityID = id
+				playerResources, err = cardinal.GetComponent[comp.PlayerResources](world, id)
+				if err != nil {
+					return false
+				}
+				return false
+			}
+
+			return true
+		})
+	if searchErr != nil {
+		return 0, nil, err
+	}
+	if err != nil {
+		return 0, nil, err
+	}
+	if playerResources == nil {
+		return 0, nil, fmt.Errorf("player resources %q does not exist", targetNickname)
+	}
+
+	return entityID, playerResources, err
 }
