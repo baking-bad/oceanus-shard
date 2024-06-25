@@ -2,18 +2,23 @@ package main
 
 import (
 	"errors"
+	"time"
 
 	"github.com/rs/zerolog/log"
 	"pkg.world.dev/world-engine/cardinal"
 
 	"oceanus-shard/component"
+	"oceanus-shard/constants"
 	"oceanus-shard/msg"
 	"oceanus-shard/query"
 	"oceanus-shard/system"
 )
 
 func main() {
-	w, err := cardinal.NewWorld(cardinal.WithDisableSignatureVerification())
+	w, err := cardinal.NewWorld(
+		cardinal.WithDisableSignatureVerification(),
+		cardinal.WithTickChannel(time.Tick(constants.TickRate)),
+	)
 	if err != nil {
 		log.Fatal().Err(err).Msg("")
 	}
@@ -31,8 +36,9 @@ func MustInitWorld(w *cardinal.World) {
 	Must(
 		cardinal.RegisterComponent[component.Player](w),
 		cardinal.RegisterComponent[component.Health](w),
-		cardinal.RegisterComponent[component.Resource](w),
+		cardinal.RegisterComponent[component.Farming](w),
 		cardinal.RegisterComponent[component.Building](w),
+		cardinal.RegisterComponent[component.PlayerResources](w),
 		cardinal.RegisterComponent[component.TileMap](w),
 	)
 
@@ -41,13 +47,28 @@ func MustInitWorld(w *cardinal.World) {
 	Must(
 		cardinal.RegisterMessage[msg.CreatePlayerMsg, msg.CreatePlayerResult](w, "create-player"),
 		cardinal.RegisterMessage[msg.AttackPlayerMsg, msg.AttackPlayerMsgReply](w, "attack-player"),
+		cardinal.RegisterMessage[msg.CreateBuildingMsg, msg.CreateBuildingResult](w, "create-building"),
 	)
 
 	// Register queries
 	// NOTE: You must register your queries here for it to be accessible.
 	Must(
-		cardinal.RegisterQuery[query.PlayerHealthRequest, query.PlayerHealthResponse](w, "player-health", query.PlayerHealth),
-		cardinal.RegisterQuery[query.MapStateRequest, query.MapStateResponse](w, "player-map", query.PlayerMap),
+		cardinal.RegisterQuery[
+			query.PlayerHealthRequest,
+			query.PlayerHealthResponse,
+		](w, "player-health", query.PlayerHealth),
+		cardinal.RegisterQuery[
+			query.MapStateRequest,
+			query.MapStateResponse,
+		](w, "player-map", query.PlayerMap),
+		cardinal.RegisterQuery[
+			query.BuildingsInfoRequest,
+			[]query.BuildingInfoResponse,
+		](w, "buildings-info", query.AllBuildings),
+		cardinal.RegisterQuery[
+			query.PlayerResourcesRequest,
+			query.PlayerResourcesResponse,
+		](w, "player-resources", query.PlayerResources),
 	)
 
 	// Each system executes deterministically in the order they are added.
@@ -56,8 +77,9 @@ func MustInitWorld(w *cardinal.World) {
 	// so that the player's HP is subtracted (and player killed if it reaches 0) before HP is regenerated.
 	Must(cardinal.RegisterSystems(w,
 		system.AttackSystem,
-		system.RegenSystem,
+		system.FarmingSystem,
 		system.PlayerSpawnerSystem,
+		system.CreateBuildingSystem,
 	))
 }
 

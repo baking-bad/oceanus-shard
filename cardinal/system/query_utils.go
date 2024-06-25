@@ -3,18 +3,24 @@ package system
 import (
 	"fmt"
 	comp "oceanus-shard/component"
+	"reflect"
+
 	"pkg.world.dev/world-engine/cardinal"
 	"pkg.world.dev/world-engine/cardinal/search/filter"
 	"pkg.world.dev/world-engine/cardinal/types"
 )
 
-// QueryTargetPlayer queries for the target player's entity ID and health component.
-func QueryTargetPlayer(world cardinal.WorldContext, targetNickname string) (types.EntityID, *comp.Health, error) {
-	var playerID types.EntityID
-	var playerHealth *comp.Health
+func QueryComponent[T types.Component](
+	world cardinal.WorldContext,
+	targetNickname string,
+	components ...filter.ComponentWrapper,
+) (types.EntityID, *T, error) {
+	var entityID types.EntityID
+	var targetComponent *T
 	var err error
+
 	searchErr := cardinal.NewSearch().Entity(
-		filter.Exact(filter.Component[comp.Player](), filter.Component[comp.Health]())).Each(world,
+		filter.Contains(components...)).Each(world,
 		func(id types.EntityID) bool {
 			var player *comp.Player
 			player, err = cardinal.GetComponent[comp.Player](world, id)
@@ -24,15 +30,14 @@ func QueryTargetPlayer(world cardinal.WorldContext, targetNickname string) (type
 
 			// Terminates the search if the player is found
 			if player.Nickname == targetNickname {
-				playerID = id
-				playerHealth, err = cardinal.GetComponent[comp.Health](world, id)
+				entityID = id
+				targetComponent, err = cardinal.GetComponent[T](world, id)
 				if err != nil {
 					return false
 				}
 				return false
 			}
 
-			// Continue searching if the player is not the target player
 			return true
 		})
 	if searchErr != nil {
@@ -41,9 +46,9 @@ func QueryTargetPlayer(world cardinal.WorldContext, targetNickname string) (type
 	if err != nil {
 		return 0, nil, err
 	}
-	if playerHealth == nil {
-		return 0, nil, fmt.Errorf("player %q does not exist", targetNickname)
+	if targetComponent == nil {
+		return 0, nil, fmt.Errorf("component %s on %q does not exist", reflect.TypeOf(targetComponent).Name(), targetNickname)
 	}
 
-	return playerID, playerHealth, err
+	return entityID, targetComponent, err
 }

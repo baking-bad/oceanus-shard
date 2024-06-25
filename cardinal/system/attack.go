@@ -2,7 +2,9 @@ package system
 
 import (
 	"fmt"
+
 	"pkg.world.dev/world-engine/cardinal"
+	"pkg.world.dev/world-engine/cardinal/search/filter"
 
 	comp "oceanus-shard/component"
 	"oceanus-shard/msg"
@@ -16,7 +18,12 @@ func AttackSystem(world cardinal.WorldContext) error {
 	return cardinal.EachMessage[msg.AttackPlayerMsg, msg.AttackPlayerMsgReply](
 		world,
 		func(attack cardinal.TxData[msg.AttackPlayerMsg]) (msg.AttackPlayerMsgReply, error) {
-			playerID, playerHealth, err := QueryTargetPlayer(world, attack.Msg.TargetNickname)
+			playerID, playerHealth, err := QueryComponent[comp.Health](
+				world,
+				attack.Msg.TargetNickname,
+				filter.Component[comp.Player](),
+				filter.Component[comp.Health](),
+			)
 			if err != nil {
 				return msg.AttackPlayerMsgReply{}, fmt.Errorf("failed to inflict damage: %w", err)
 			}

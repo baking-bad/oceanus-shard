@@ -53,6 +53,22 @@ func PlayerSpawnerSystem(world cardinal.WorldContext) error {
 
 			var playerComponent = comp.Player{Nickname: create.Msg.Nickname}
 
+			resources := make([]comp.Resource, len(comp.GetAllResourceTypes()))
+			for i, resourceType := range comp.GetAllResourceTypes() {
+				resources[i] = comp.Resource{
+					Type:   resourceType,
+					Amount: 0,
+				}
+			}
+
+			effects := make([]comp.Effect, len(comp.GetAllEffectTypes()))
+			for i, effectType := range comp.GetAllEffectTypes() {
+				effects[i] = comp.Effect{
+					Type:   effectType,
+					Amount: 0,
+				}
+			}
+
 			mapID, err := cardinal.Create(world,
 				playerComponent,
 				comp.TileMap{
@@ -60,18 +76,21 @@ func PlayerSpawnerSystem(world cardinal.WorldContext) error {
 					Width:  comp.MapWidth,
 					Height: comp.MapHeight,
 				},
+				comp.PlayerResources{
+					Resources: resources,
+					Effects:   effects,
+				},
 			)
 
-			var building = comp.GetBuilding(comp.Main)
+			var building, _ = comp.GetBuilding(comp.Main)
+
 			mainBuildingID, err := cardinal.Create(world,
 				playerComponent,
 				comp.Building{
 					Level:           building.Level,
 					Type:            building.Type,
-					FarmingResource: building.FarmingResource,
-					FarmingSpeed:    building.FarmingSpeed,
+					Farming:         building.Farming,
 					Effect:          building.Effect,
-					EffectAmount:    building.EffectAmount,
 					UnitLimit:       building.UnitLimit,
 					StorageCapacity: building.StorageCapacity,
 				},
@@ -86,7 +105,6 @@ func PlayerSpawnerSystem(world cardinal.WorldContext) error {
 				"mapID":          mapID,
 				"mainBuildingID": mainBuildingID,
 			})
-			world.CurrentTick()
 			if err != nil {
 				return msg.CreatePlayerResult{Success: false}, err
 			}
