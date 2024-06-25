@@ -16,7 +16,13 @@ func FarmingSystem(world cardinal.WorldContext) error {
 			playerComponent, _ := cardinal.GetComponent[comp.Player](world, id)
 			farmingComponent, _ := cardinal.GetComponent[comp.Farming](world, id)
 
-			playerEntityID, playerResources, err := QueryPlayerResources(world, playerComponent.Nickname)
+			playerEntityID, playerResources, err := QueryComponent[comp.PlayerResources](
+				world,
+				playerComponent.Nickname,
+				filter.Component[comp.Player](),
+				filter.Component[comp.PlayerResources](),
+			)
+
 			if err != nil {
 				return true
 			}

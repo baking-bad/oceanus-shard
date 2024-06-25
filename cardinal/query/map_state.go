@@ -5,6 +5,7 @@ import (
 	"oceanus-shard/system"
 
 	"pkg.world.dev/world-engine/cardinal"
+	"pkg.world.dev/world-engine/cardinal/search/filter"
 )
 
 type MapStateRequest struct {
@@ -18,7 +19,12 @@ type MapStateResponse struct {
 }
 
 func PlayerMap(world cardinal.WorldContext, req *MapStateRequest) (*MapStateResponse, error) {
-	_, playerMap, err := system.QueryPlayerMap(world, req.Nickname)
+	_, playerMap, err := system.QueryComponent[comp.TileMap](
+		world,
+		req.Nickname,
+		filter.Component[comp.Player](),
+		filter.Component[comp.TileMap](),
+	)
 	return &MapStateResponse{
 		Tiles:  playerMap.Tiles,
 		Width:  playerMap.Width,

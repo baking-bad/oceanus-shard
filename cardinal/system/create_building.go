@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"pkg.world.dev/world-engine/cardinal"
+	"pkg.world.dev/world-engine/cardinal/search/filter"
 
 	comp "oceanus-shard/component"
 	"oceanus-shard/msg"
@@ -14,7 +15,12 @@ func CreateBuildingSystem(world cardinal.WorldContext) error {
 	return cardinal.EachMessage[msg.CreateBuildingMsg, msg.CreateBuildingResult](
 		world,
 		func(request cardinal.TxData[msg.CreateBuildingMsg]) (msg.CreateBuildingResult, error) {
-			mapEntityID, playerMap, err := QueryPlayerMap(world, request.Tx.PersonaTag)
+			mapEntityID, playerMap, err := QueryComponent[comp.TileMap](
+				world,
+				request.Tx.PersonaTag,
+				filter.Component[comp.Player](),
+				filter.Component[comp.TileMap](),
+			)
 			if err != nil {
 				return msg.CreateBuildingResult{Success: false}, fmt.Errorf("can't get player map %w", err)
 			}
@@ -35,7 +41,7 @@ func CreateBuildingSystem(world cardinal.WorldContext) error {
 			if tile.Building == nil {
 				tile.Building = &building
 			} else {
-				return msg.CreateBuildingResult{Success: false}, fmt.Errorf("failed to create building, this tile already have building")
+				return msg.CreateBuildingResult{Success: false}, fmt.Errorf("failed to create building, this tile already have another building")
 			}
 
 			player, _ := cardinal.GetComponent[comp.Player](world, mapEntityID)

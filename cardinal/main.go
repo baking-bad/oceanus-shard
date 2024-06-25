@@ -56,6 +56,7 @@ func MustInitWorld(w *cardinal.World) {
 		cardinal.RegisterQuery[query.PlayerHealthRequest, query.PlayerHealthResponse](w, "player-health", query.PlayerHealth),
 		cardinal.RegisterQuery[query.MapStateRequest, query.MapStateResponse](w, "player-map", query.PlayerMap),
 		cardinal.RegisterQuery[query.BuildingsInfoRequest, []query.BuildingInfoResponse](w, "buildings-info", query.AllBuildings),
+		cardinal.RegisterQuery[query.PlayerResourcesRequest, query.PlayerResourcesResponse](w, "player-resources", query.PlayerResources),
 	)
 
 	// Each system executes deterministically in the order they are added.
