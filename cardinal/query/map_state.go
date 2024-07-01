@@ -1,6 +1,7 @@
 package query
 
 import (
+	"fmt"
 	comp "oceanus-shard/component"
 	"oceanus-shard/system"
 
@@ -25,6 +26,11 @@ func PlayerMap(world cardinal.WorldContext, req *MapStateRequest) (*MapStateResp
 		filter.Component[comp.Player](),
 		filter.Component[comp.TileMap](),
 	)
+
+	if playerMap == nil {
+		return nil, fmt.Errorf("error querying players %s map", req.Nickname)
+	}
+
 	return &MapStateResponse{
 		Tiles:  playerMap.Tiles,
 		Width:  playerMap.Width,

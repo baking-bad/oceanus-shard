@@ -1,6 +1,7 @@
 package query
 
 import (
+	"fmt"
 	comp "oceanus-shard/component"
 	"oceanus-shard/system"
 
@@ -45,6 +46,10 @@ func PlayerResources(world cardinal.WorldContext, req *PlayerResourcesRequest) (
 			Type:  resourceType,
 			Speed: speed,
 		})
+	}
+
+	if playerResources == nil {
+		return nil, fmt.Errorf("error querying player %s resources", req.Nickname)
 	}
 
 	return &PlayerResourcesResponse{
