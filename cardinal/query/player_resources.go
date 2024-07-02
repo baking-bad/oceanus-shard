@@ -62,7 +62,7 @@ func PlayerResources(world cardinal.WorldContext, req *PlayerResourcesRequest) (
 	capacity := 0
 	for _, building := range allBuildings {
 		if building.Effect != nil {
-			effectsMap[building.Effect.Type] += building.Effect.Amount
+			effectsMap[building.Effect.Type] += comp.BuildingConfigs[building.Type].Effect.Amount
 		}
 
 		capacity += building.StorageCapacity
