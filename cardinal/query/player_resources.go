@@ -41,7 +41,7 @@ func PlayerResources(world cardinal.WorldContext, req *PlayerResourcesRequest) (
 		filter.Component[comp.Player](),
 	)
 
-	if playerResources == nil || farmingComponents == nil || allBuildings == nil {
+	if playerResources == nil {
 		return nil, fmt.Errorf("error querying player %s resources", req.Nickname)
 	}
 
