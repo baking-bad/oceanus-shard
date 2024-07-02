@@ -123,7 +123,6 @@ services:
       - "8080"
       - "26257"
     ports:
-      - "26257:26257"
       - "8080:8080"
     healthcheck:
       test: [ "CMD", "curl", "-f", "http://localhost:8080/health?ready=1" ]
@@ -141,8 +140,6 @@ services:
       - REDIS_PASSWORD=${REDIS_PASSWORD:-}
     expose:
       - "6379"
-    ports:
-      - "6379:6379"
     attach: false
     restart: unless-stopped
     volumes:
