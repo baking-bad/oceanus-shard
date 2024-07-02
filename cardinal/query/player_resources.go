@@ -27,12 +27,23 @@ func PlayerResources(world cardinal.WorldContext, req *PlayerResourcesRequest) (
 		filter.Component[comp.PlayerResources](),
 	)
 
-	_, farmingComponents, err := system.QueryAllComponents[comp.Farming](
+	_, farmingComponents, _ := system.QueryAllComponents[comp.Farming](
 		world,
 		req.Nickname,
 		filter.Component[comp.Building](),
 		filter.Component[comp.Farming](),
 	)
+
+	_, allBuildings, err := system.QueryAllComponents[comp.Building](
+		world,
+		req.Nickname,
+		filter.Component[comp.Building](),
+		filter.Component[comp.Player](),
+	)
+
+	if playerResources == nil || farmingComponents == nil || allBuildings == nil {
+		return nil, fmt.Errorf("error querying player %s resources", req.Nickname)
+	}
 
 	aggregatedFarmingMap := make(map[comp.ResourceType]float32)
 	for _, farming := range farmingComponents {
@@ -40,7 +51,6 @@ func PlayerResources(world cardinal.WorldContext, req *PlayerResourcesRequest) (
 	}
 
 	aggregatedfarmingSlice := make([]comp.Farming, 0, len(aggregatedFarmingMap))
-
 	for resourceType, speed := range aggregatedFarmingMap {
 		aggregatedfarmingSlice = append(aggregatedfarmingSlice, comp.Farming{
 			Type:  resourceType,
@@ -48,13 +58,31 @@ func PlayerResources(world cardinal.WorldContext, req *PlayerResourcesRequest) (
 		})
 	}
 
-	if playerResources == nil {
-		return nil, fmt.Errorf("error querying player %s resources", req.Nickname)
+	effectsMap := make(map[comp.EffectType]int)
+	capacity := 0
+	for _, building := range allBuildings {
+		if building.Effect != nil {
+			effectsMap[building.Effect.Type] += building.Effect.Amount
+		}
+
+		capacity += building.StorageCapacity
+	}
+
+	resourcesResponse := make([]comp.Resource, 0, len(playerResources.Resources))
+	for _, resource := range playerResources.Resources {
+		resource.Capacity = capacity
+		resourcesResponse = append(resourcesResponse, resource)
+	}
+
+	effectsResponse := make([]comp.Effect, 0, len(playerResources.Effects))
+	for _, effect := range playerResources.Effects {
+		effect.Capacity = effectsMap[effect.Type]
+		effectsResponse = append(effectsResponse, effect)
 	}
 
 	return &PlayerResourcesResponse{
-		Resources: playerResources.Resources,
-		Effects:   playerResources.Effects,
+		Resources: resourcesResponse,
+		Effects:   effectsResponse,
 		Farming:   aggregatedfarmingSlice,
 	}, err
 }
