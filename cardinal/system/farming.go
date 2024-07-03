@@ -44,9 +44,9 @@ func FarmingSystem(world cardinal.WorldContext) error {
 
 			for i := range playerResources.Resources {
 				if playerResources.Resources[i].Type == farmingComponent.Type {
-					tickFarmedAmount := farmingComponent.Speed * float64(constants.TickRate.Seconds()) / float64(time.Minute.Seconds())
+					tickFarmedAmount := farmingComponent.Speed * constants.TickRate.Seconds() / time.Minute.Seconds()
 					playerResources.Resources[i].Amount = math.Min(
-						float64(playerResources.Resources[i].Amount+tickFarmedAmount),
+						playerResources.Resources[i].Amount+tickFarmedAmount,
 						float64(totalCapacity),
 					)
 					if err := cardinal.SetComponent[comp.PlayerResources](world, playerEntityID, playerResources); err != nil {
