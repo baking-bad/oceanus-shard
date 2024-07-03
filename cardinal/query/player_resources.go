@@ -45,7 +45,7 @@ func PlayerResources(world cardinal.WorldContext, req *PlayerResourcesRequest) (
 		return nil, fmt.Errorf("error querying player %s resources", req.Nickname)
 	}
 
-	aggregatedFarmingMap := make(map[comp.ResourceType]float32)
+	aggregatedFarmingMap := make(map[comp.ResourceType]float64)
 	for _, farming := range farmingComponents {
 		aggregatedFarmingMap[farming.Type] += farming.Speed
 	}

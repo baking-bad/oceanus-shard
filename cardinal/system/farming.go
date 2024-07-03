@@ -1,6 +1,7 @@
 package system
 
 import (
+	"math"
 	"time"
 
 	"pkg.world.dev/world-engine/cardinal"
@@ -18,12 +19,24 @@ func FarmingSystem(world cardinal.WorldContext) error {
 			playerComponent, _ := cardinal.GetComponent[comp.Player](world, id)
 			farmingComponent, _ := cardinal.GetComponent[comp.Farming](world, id)
 
-			playerEntityID, playerResources, err := QueryComponent[comp.PlayerResources](
+			playerEntityID, playerResources, _ := QueryComponent[comp.PlayerResources](
 				world,
 				playerComponent.Nickname,
 				filter.Component[comp.Player](),
 				filter.Component[comp.PlayerResources](),
 			)
+
+			_, playerBuildings, err := QueryAllComponents[comp.Building](
+				world,
+				playerComponent.Nickname,
+				filter.Component[comp.Player](),
+				filter.Component[comp.Building](),
+			)
+
+			totalCapacity := 0
+			for _, building := range playerBuildings {
+				totalCapacity += building.StorageCapacity
+			}
 
 			if err != nil {
 				return true
@@ -31,9 +44,11 @@ func FarmingSystem(world cardinal.WorldContext) error {
 
 			for i := range playerResources.Resources {
 				if playerResources.Resources[i].Type == farmingComponent.Type {
-					playerResources.Resources[i].Amount +=
-						farmingComponent.Speed * float32(constants.TickRate.Seconds()) / float32(time.Minute.Seconds())
-
+					tickFarmedAmount := farmingComponent.Speed * float64(constants.TickRate.Seconds()) / float64(time.Minute.Seconds())
+					playerResources.Resources[i].Amount = math.Min(
+						float64(playerResources.Resources[i].Amount+tickFarmedAmount),
+						float64(totalCapacity),
+					)
 					if err := cardinal.SetComponent[comp.PlayerResources](world, playerEntityID, playerResources); err != nil {
 						return true
 					}
