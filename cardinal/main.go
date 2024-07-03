@@ -48,6 +48,7 @@ func MustInitWorld(w *cardinal.World) {
 		cardinal.RegisterMessage[msg.CreatePlayerMsg, msg.CreatePlayerResult](w, "create-player"),
 		cardinal.RegisterMessage[msg.AttackPlayerMsg, msg.AttackPlayerMsgReply](w, "attack-player"),
 		cardinal.RegisterMessage[msg.CreateBuildingMsg, msg.CreateBuildingResult](w, "create-building"),
+		cardinal.RegisterMessage[msg.DeleteBuildingMsg, msg.DeleteBuildingResult](w, "delete-building"),
 	)
 
 	// Register queries
@@ -80,6 +81,7 @@ func MustInitWorld(w *cardinal.World) {
 		system.FarmingSystem,
 		system.PlayerSpawnerSystem,
 		system.CreateBuildingSystem,
+		system.DeleteBuildingSystem,
 	))
 }
 

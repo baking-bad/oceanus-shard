@@ -57,8 +57,8 @@ func QueryAllComponents[T types.Component](
 	world cardinal.WorldContext,
 	targetNickname string,
 	components ...filter.ComponentWrapper,
-) (types.EntityID, []*T, error) {
-	var entityID types.EntityID
+) ([]types.EntityID, []*T, error) {
+	var entityIDs []types.EntityID
 	var targetComponents []*T
 	var err error
 
@@ -72,7 +72,7 @@ func QueryAllComponents[T types.Component](
 			}
 
 			if player.Nickname == targetNickname {
-				entityID = id
+				entityIDs = append(entityIDs, id)
 				targetComponent, _ := cardinal.GetComponent[T](world, id)
 				targetComponents = append(targetComponents, targetComponent)
 			}
@@ -80,10 +80,10 @@ func QueryAllComponents[T types.Component](
 			return true
 		})
 	if searchErr != nil {
-		return 0, nil, err
+		return nil, nil, err
 	}
 	if err != nil {
-		return 0, nil, err
+		return nil, nil, err
 	}
-	return entityID, targetComponents, err
+	return entityIDs, targetComponents, err
 }
