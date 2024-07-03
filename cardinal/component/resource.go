@@ -22,7 +22,7 @@ func GetAllResourceTypes() []ResourceType {
 
 type Resource struct {
 	Type     ResourceType `json:"type"`
-	Amount   float32      `json:"amount"`
+	Amount   float64      `json:"amount"`
 	Capacity int          `json:"capacity,omitempty"`
 }
 
