@@ -24,7 +24,7 @@ const (
 	ShipyardResourcesWoodAmount  = 20
 	ShipyardResourcesStoneAmount = 30
 	ShipyardResourcesFishAmount  = 10
-	ShipyardEffectRaftAmount     = 1
+	ShipyardEffectRaftCapacity   = 1
 )
 
 const (

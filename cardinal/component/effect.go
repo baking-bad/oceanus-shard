@@ -14,7 +14,7 @@ func GetAllEffectTypes() []EffectType {
 
 type Effect struct {
 	Type     EffectType `json:"type"`
-	Amount   int        `json:"amount"`
+	Amount   int        `json:"amount,omitempty"`
 	Capacity int        `json:"capacity,omitempty"`
 }
 

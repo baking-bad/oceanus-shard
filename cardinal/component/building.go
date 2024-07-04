@@ -94,8 +94,8 @@ var BuildingConfigs = map[BuildingType]BuildingConstants{
 			{Type: Fish, Amount: constants.ShipyardResourcesFishAmount},
 		},
 		Effect: &Effect{
-			Type:   Raft,
-			Amount: constants.ShipyardEffectRaftAmount,
+			Type:     Raft,
+			Capacity: constants.ShipyardEffectRaftCapacity,
 		},
 		TileType: CoastlineTile,
 	},
@@ -149,9 +149,12 @@ func GetBuilding(buildingType BuildingType) (Building, error) {
 		}, nil
 	case Shipyard:
 		return Building{
-			Level:  1,
-			Type:   buildingType,
-			Effect: config.Effect,
+			Level: 1,
+			Type:  buildingType,
+			Effect: &Effect{
+				Type:   config.Effect.Type,
+				Amount: 1,
+			},
 		}, nil
 	case Warehouse:
 		return Building{

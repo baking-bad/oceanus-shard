@@ -1,7 +1,7 @@
 package msg
 
 type DeleteBuildingMsg struct {
-	TileIndex int `json:"tileID"`
+	TileIndex int `json:"tileIndex"`
 }
 
 type DeleteBuildingResult struct {
