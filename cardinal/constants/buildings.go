@@ -25,10 +25,12 @@ const (
 )
 
 const (
-	ShipyardResourcesWoodAmount  = 20
-	ShipyardResourcesStoneAmount = 30
-	ShipyardResourcesFishAmount  = 10
-	ShipyardEffectRaftCapacity   = 1
+	ShipyardResourcesWoodAmount    = 20
+	ShipyardResourcesStoneAmount   = 30
+	ShipyardResourcesFishAmount    = 10
+	ShipyardEffectRaftCapacity     = 1
+	ShipyardEffectRaftResourceWood = 10
+	ShipyardEffectRaftResourceFish = 20
 )
 
 const (

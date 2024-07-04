@@ -96,6 +96,10 @@ var BuildingConfigs = map[BuildingType]BuildingConstants{
 		Effect: &Effect{
 			Type:     Raft,
 			Capacity: constants.ShipyardEffectRaftCapacity,
+			Resources: []Resource{
+				{Type: Wood, Amount: constants.ShipyardEffectRaftResourceWood},
+				{Type: Fish, Amount: constants.ShipyardEffectRaftResourceFish},
+			},
 		},
 		TileType: CoastlineTile,
 	},
