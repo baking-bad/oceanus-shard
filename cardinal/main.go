@@ -40,6 +40,7 @@ func MustInitWorld(w *cardinal.World) {
 		cardinal.RegisterComponent[component.Building](w),
 		cardinal.RegisterComponent[component.PlayerResources](w),
 		cardinal.RegisterComponent[component.TileMap](w),
+		cardinal.RegisterComponent[component.Effect](w),
 	)
 
 	// Register messages (user action)
