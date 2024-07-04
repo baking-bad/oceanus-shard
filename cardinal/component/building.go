@@ -152,8 +152,9 @@ func GetBuilding(buildingType BuildingType) (Building, error) {
 			Level: 1,
 			Type:  buildingType,
 			Effect: &Effect{
-				Type:   config.Effect.Type,
-				Amount: 1,
+				Type:     config.Effect.Type,
+				Amount:   0,
+				Capacity: config.Effect.Capacity,
 			},
 		}, nil
 	case Warehouse:

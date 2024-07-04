@@ -1,23 +1,27 @@
 package constants
 
 const (
-	MainUnitLimit       = 5
-	MainStorageCapacity = 10
+	MainUnitLimit = 5
+	// MainStorageCapacity = 10
+	MainStorageCapacity = 100
 )
 
 const (
-	WoodcutterFarmingSpeed = 5
+	// WoodcutterFarmingSpeed = 5
+	WoodcutterFarmingSpeed = 50
 )
 
 const (
 	QuarryResourcesWoodAmount = 5
-	QuarryFarmingStoneSpeed   = 5
+	// QuarryFarmingStoneSpeed   = 5
+	QuarryFarmingStoneSpeed = 50
 )
 
 const (
 	FishermanHutResourcesWoodAmount  = 10
 	FishermanHutResourcesStoneAmount = 10
-	FishermanHutFarmingFishSpeed     = 5
+	// FishermanHutFarmingFishSpeed     = 5
+	FishermanHutFarmingFishSpeed = 50
 )
 
 const (
