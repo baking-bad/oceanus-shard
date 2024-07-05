@@ -85,6 +85,7 @@ func MustInitWorld(w *cardinal.World) {
 		system.CreateBuildingSystem,
 		system.DeleteBuildingSystem,
 		system.CreateEffectSystem,
+		system.EffectsSpawnerSystem,
 	))
 }
 
