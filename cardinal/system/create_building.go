@@ -41,6 +41,7 @@ func CreateBuildingSystem(world cardinal.WorldContext) error {
 
 			tile := &(*playerMap.Tiles)[request.Msg.TileIndex]
 			if tile.Building == nil {
+				building.TileID = request.Msg.TileIndex
 				tile.Building = &building
 			} else {
 				return msg.CreateBuildingResult{Success: false},
@@ -55,14 +56,7 @@ func CreateBuildingSystem(world cardinal.WorldContext) error {
 
 			buildingEntityID, _ := cardinal.Create(world,
 				player,
-				comp.Building{
-					Level:           building.Level,
-					Type:            building.Type,
-					Farming:         building.Farming,
-					Effect:          building.Effect,
-					UnitLimit:       building.UnitLimit,
-					StorageCapacity: building.StorageCapacity,
-				},
+				building,
 			)
 
 			if building.Farming != nil {
