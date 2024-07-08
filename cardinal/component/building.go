@@ -30,6 +30,7 @@ func GetAllBuildingTypes() []BuildingType {
 }
 
 type Building struct {
+	TileID          int          `json:"tileID"`
 	Level           int          `json:"level"`
 	Type            BuildingType `json:"type"`
 	Farming         *Farming     `json:"farming,omitempty"`
@@ -43,6 +44,7 @@ func (Building) Name() string {
 }
 
 type BuildingConstants struct {
+	TileID          int
 	UnitLimit       int
 	StorageCapacity int
 	Resources       []Resource
@@ -53,6 +55,7 @@ type BuildingConstants struct {
 
 var BuildingConfigs = map[BuildingType]BuildingConstants{
 	Main: {
+		TileID:          constants.MainTileID,
 		Resources:       []Resource{},
 		UnitLimit:       constants.MainUnitLimit,
 		StorageCapacity: constants.MainStorageCapacity,
@@ -100,6 +103,7 @@ var BuildingConfigs = map[BuildingType]BuildingConstants{
 				{Type: Wood, Amount: constants.ShipyardEffectRaftResourceWood},
 				{Type: Fish, Amount: constants.ShipyardEffectRaftResourceFish},
 			},
+			BuildingTimeSeconds: constants.ShipyardEffectRaftBuildSeconds,
 		},
 		TileType: CoastlineTile,
 	},
@@ -128,6 +132,7 @@ func GetBuilding(buildingType BuildingType) (Building, error) {
 	switch buildingType {
 	case Main:
 		return Building{
+			TileID:          config.TileID,
 			Level:           1,
 			Type:            buildingType,
 			UnitLimit:       config.UnitLimit,
@@ -153,14 +158,9 @@ func GetBuilding(buildingType BuildingType) (Building, error) {
 		}, nil
 	case Shipyard:
 		return Building{
-			Level: 1,
-			Type:  buildingType,
-			Effect: &Effect{
-				Type:      config.Effect.Type,
-				Amount:    0,
-				Capacity:  config.Effect.Capacity,
-				Resources: config.Effect.Resources,
-			},
+			Level:  1,
+			Type:   buildingType,
+			Effect: config.Effect,
 		}, nil
 	case Warehouse:
 		return Building{

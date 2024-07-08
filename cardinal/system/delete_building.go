@@ -22,7 +22,7 @@ func DeleteBuildingSystem(world cardinal.WorldContext) error {
 				filter.Component[comp.TileMap](),
 			)
 
-			buildingsEntityIDs, buildingComponents, _ := QueryAllComponents[comp.Building](
+			buildingsEntityIDs, playerBuildings, _ := QueryAllComponents[comp.Building](
 				world,
 				request.Tx.PersonaTag,
 				filter.Component[comp.Player](),
@@ -50,8 +50,8 @@ func DeleteBuildingSystem(world cardinal.WorldContext) error {
 				return msg.DeleteBuildingResult{Success: false},
 					fmt.Errorf("failed to delete building, this tile didn't have buildings")
 			}
-			for i, building := range buildingComponents {
-				if building.Type == tile.Building.Type {
+			for i, building := range playerBuildings {
+				if building.TileID == tile.Building.TileID {
 					if err := cardinal.Remove(world, buildingsEntityIDs[i]); err != nil {
 						return msg.DeleteBuildingResult{Success: false}, fmt.Errorf("failed to delete building entity: %w", err)
 					}

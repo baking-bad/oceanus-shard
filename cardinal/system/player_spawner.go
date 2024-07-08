@@ -64,8 +64,9 @@ func PlayerSpawnerSystem(world cardinal.WorldContext) error {
 			effects := make([]comp.Effect, len(comp.GetAllEffectTypes()))
 			for i, effectType := range comp.GetAllEffectTypes() {
 				effects[i] = comp.Effect{
-					Type:   effectType,
-					Amount: 0,
+					Type:     effectType,
+					Amount:   0,
+					Capacity: comp.GetCapacityByEffectType(effectType),
 				}
 			}
 
@@ -82,18 +83,10 @@ func PlayerSpawnerSystem(world cardinal.WorldContext) error {
 				},
 			)
 
-			var building, _ = comp.GetBuilding(comp.Main)
-
+			var mainBuilding, _ = comp.GetBuilding(comp.Main)
 			mainBuildingID, err := cardinal.Create(world,
 				playerComponent,
-				comp.Building{
-					Level:           building.Level,
-					Type:            building.Type,
-					Farming:         building.Farming,
-					Effect:          building.Effect,
-					UnitLimit:       building.UnitLimit,
-					StorageCapacity: building.StorageCapacity,
-				},
+				mainBuilding,
 			)
 
 			if err != nil {

@@ -1,6 +1,7 @@
 package constants
 
 const (
+	MainTileID    = 22
 	MainUnitLimit = 5
 	// MainStorageCapacity = 10
 	MainStorageCapacity = 100
@@ -31,6 +32,7 @@ const (
 	ShipyardEffectRaftCapacity     = 1
 	ShipyardEffectRaftResourceWood = 10
 	ShipyardEffectRaftResourceFish = 20
+	ShipyardEffectRaftBuildSeconds = 60
 )
 
 const (
