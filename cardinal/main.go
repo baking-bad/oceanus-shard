@@ -50,6 +50,7 @@ func MustInitWorld(w *cardinal.World) {
 		cardinal.RegisterMessage[msg.CreateBuildingMsg, msg.CreateBuildingResult](w, "create-building"),
 		cardinal.RegisterMessage[msg.DeleteBuildingMsg, msg.DeleteBuildingResult](w, "delete-building"),
 		cardinal.RegisterMessage[msg.CreateEffectMsg, msg.CreateEffectResult](w, "create-effect"),
+		cardinal.RegisterMessage[msg.RelocateBuildingMsg, msg.RelocateBuildingResult](w, "relocate-building"),
 	)
 
 	// Register queries
@@ -80,6 +81,7 @@ func MustInitWorld(w *cardinal.World) {
 		system.DeleteBuildingSystem,
 		system.CreateEffectSystem,
 		system.EffectsSpawnerSystem,
+		system.RelocateBuildingSystem,
 	))
 }
 

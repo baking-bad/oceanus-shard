@@ -1,7 +1,6 @@
 package system
 
 import (
-	"errors"
 	"fmt"
 
 	"pkg.world.dev/world-engine/cardinal"
@@ -76,50 +75,4 @@ func CreateBuildingSystem(world cardinal.WorldContext) error {
 
 			return msg.CreateBuildingResult{Success: true}, nil
 		})
-}
-
-func SubtractResources(world cardinal.WorldContext, resources []comp.Resource, personaTag string) error {
-	playerResourcesEntityID, playerResources, _ := QueryComponent[comp.PlayerResources](
-		world,
-		personaTag,
-		filter.Component[comp.Player](),
-		filter.Component[comp.PlayerResources](),
-	)
-
-	for _, resource := range resources {
-		var playerResource *comp.Resource
-		var err error
-		if playerResource, err = GetResourceByType(playerResources, resource.Type); err != nil {
-			return fmt.Errorf("can't get player resource %s: %w", resource.Type, err)
-		}
-		if playerResource.Amount < resource.Amount {
-			return fmt.Errorf("not enough resource %s", resource.Type)
-		}
-
-		playerResource.Amount -= resource.Amount
-		SetResourceByType(playerResources, *playerResource)
-
-		if err := cardinal.SetComponent(world, playerResourcesEntityID, playerResources); err != nil {
-			return fmt.Errorf("failed to update player resource: %w", err)
-		}
-	}
-
-	return nil
-}
-
-func GetResourceByType(playerResources *comp.PlayerResources, resourceType comp.ResourceType) (*comp.Resource, error) {
-	for i := range playerResources.Resources {
-		if playerResources.Resources[i].Type == resourceType {
-			return &playerResources.Resources[i], nil
-		}
-	}
-	return nil, errors.New("resource not found")
-}
-
-func SetResourceByType(playerResources *comp.PlayerResources, newResource comp.Resource) {
-	for i := range playerResources.Resources {
-		if playerResources.Resources[i].Type == newResource.Type {
-			playerResources.Resources[i] = newResource
-		}
-	}
 }

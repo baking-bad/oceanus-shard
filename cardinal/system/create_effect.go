@@ -1,7 +1,6 @@
 package system
 
 import (
-	"errors"
 	"fmt"
 
 	"pkg.world.dev/world-engine/cardinal"
@@ -77,13 +76,4 @@ func CreateEffectSystem(world cardinal.WorldContext) error {
 
 			return msg.CreateEffectResult{Success: true}, nil
 		})
-}
-
-func FindBuildingByTileID(buildings []*comp.Building, tileID int) (*comp.Building, int, error) {
-	for index, building := range buildings {
-		if building.TileID == tileID {
-			return building, index, nil
-		}
-	}
-	return nil, -1, errors.New("building with given tileID not found")
 }
