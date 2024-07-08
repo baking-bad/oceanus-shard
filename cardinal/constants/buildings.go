@@ -9,20 +9,20 @@ const (
 
 const (
 	// WoodcutterFarmingSpeed = 5
-	WoodcutterFarmingSpeed = 150
+	WoodcutterFarmingSpeed = 50
 )
 
 const (
 	QuarryResourcesWoodAmount = 5
 	// QuarryFarmingStoneSpeed   = 5
-	QuarryFarmingStoneSpeed = 150
+	QuarryFarmingStoneSpeed = 50
 )
 
 const (
 	FishermanHutResourcesWoodAmount  = 10
 	FishermanHutResourcesStoneAmount = 10
 	// FishermanHutFarmingFishSpeed     = 5
-	FishermanHutFarmingFishSpeed = 150
+	FishermanHutFarmingFishSpeed = 50
 )
 
 const (
