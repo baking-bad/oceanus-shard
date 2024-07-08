@@ -1,6 +1,8 @@
 package system
 
 import (
+	"time"
+
 	"pkg.world.dev/world-engine/cardinal"
 	"pkg.world.dev/world-engine/cardinal/search/filter"
 	"pkg.world.dev/world-engine/cardinal/types"
@@ -39,7 +41,7 @@ func EffectsSpawnerSystem(world cardinal.WorldContext) error {
 
 				previousEffectAmount := effectComponent.Amount
 				endBuildingTime := effectComponent.BuildingTimeStartedAt +
-					uint64(effectComponent.BuildingTimeSeconds*constants.MillisecondsInSecond)
+					uint64(time.Duration(effectComponent.BuildingTimeSeconds)*time.Second/time.Millisecond)
 
 				if world.Timestamp() < endBuildingTime {
 					return true
