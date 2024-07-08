@@ -64,8 +64,9 @@ func PlayerSpawnerSystem(world cardinal.WorldContext) error {
 			effects := make([]comp.Effect, len(comp.GetAllEffectTypes()))
 			for i, effectType := range comp.GetAllEffectTypes() {
 				effects[i] = comp.Effect{
-					Type:   effectType,
-					Amount: 0,
+					Type:     effectType,
+					Amount:   0,
+					Capacity: comp.GetCapacityByEffectType(effectType),
 				}
 			}
 

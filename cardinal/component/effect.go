@@ -1,5 +1,7 @@
 package component
 
+import "oceanus-shard/constants"
+
 type EffectType string
 
 const (
@@ -9,6 +11,15 @@ const (
 func GetAllEffectTypes() []EffectType {
 	return []EffectType{
 		Raft,
+	}
+}
+
+func GetCapacityByEffectType(effectType EffectType) int {
+	switch effectType {
+	case Raft:
+		return constants.ShipyardEffectRaftCapacity
+	default:
+		return 0
 	}
 }
 

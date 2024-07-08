@@ -47,7 +47,6 @@ func MustInitWorld(w *cardinal.World) {
 	// NOTE: You must register your transactions here for it to be executed.
 	Must(
 		cardinal.RegisterMessage[msg.CreatePlayerMsg, msg.CreatePlayerResult](w, "create-player"),
-		cardinal.RegisterMessage[msg.AttackPlayerMsg, msg.AttackPlayerMsgReply](w, "attack-player"),
 		cardinal.RegisterMessage[msg.CreateBuildingMsg, msg.CreateBuildingResult](w, "create-building"),
 		cardinal.RegisterMessage[msg.DeleteBuildingMsg, msg.DeleteBuildingResult](w, "delete-building"),
 		cardinal.RegisterMessage[msg.CreateEffectMsg, msg.CreateEffectResult](w, "create-effect"),
@@ -56,10 +55,6 @@ func MustInitWorld(w *cardinal.World) {
 	// Register queries
 	// NOTE: You must register your queries here for it to be accessible.
 	Must(
-		cardinal.RegisterQuery[
-			query.PlayerHealthRequest,
-			query.PlayerHealthResponse,
-		](w, "player-health", query.PlayerHealth),
 		cardinal.RegisterQuery[
 			query.MapStateRequest,
 			query.MapStateResponse,
@@ -79,7 +74,6 @@ func MustInitWorld(w *cardinal.World) {
 	// For example, you may want to run the attack system before the regen system
 	// so that the player's HP is subtracted (and player killed if it reaches 0) before HP is regenerated.
 	Must(cardinal.RegisterSystems(w,
-		system.AttackSystem,
 		system.FarmingSystem,
 		system.PlayerSpawnerSystem,
 		system.CreateBuildingSystem,

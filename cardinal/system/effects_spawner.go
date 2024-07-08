@@ -19,6 +19,10 @@ func EffectsSpawnerSystem(world cardinal.WorldContext) error {
 				effectComponent, _ := cardinal.GetComponent[comp.Effect](world, id)
 				buildingComponent, _ := cardinal.GetComponent[comp.Building](world, id)
 
+				if effectComponent.BuildingTimeStartedAt == 0 {
+					return true
+				}
+
 				playerMapEntityID, playerMap, _ := QueryComponent[comp.TileMap](
 					world,
 					playerComponent.Nickname,
@@ -56,7 +60,7 @@ func EffectsSpawnerSystem(world cardinal.WorldContext) error {
 					}
 
 					totalEffectsAmount := playerResourcesEffect.Amount + effectComponent.Amount - previousEffectAmount
-					playerResources.Effects = UpdateResourceAmount(playerResources.Effects, effectComponent.Type, totalEffectsAmount)
+					playerResources.Effects = UpdateEffectsAmount(playerResources.Effects, effectComponent.Type, totalEffectsAmount)
 					if err := cardinal.SetComponent(world, playerResourcesEntityID, playerResources); err != nil {
 						return true
 					}
@@ -77,7 +81,7 @@ func EffectsSpawnerSystem(world cardinal.WorldContext) error {
 		)
 }
 
-func UpdateResourceAmount(effects []comp.Effect, effectType comp.EffectType, newAmount int) []comp.Effect {
+func UpdateEffectsAmount(effects []comp.Effect, effectType comp.EffectType, newAmount int) []comp.Effect {
 	for i := range effects {
 		if effects[i].Type == effectType {
 			effects[i].Amount = newAmount

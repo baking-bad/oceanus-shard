@@ -35,10 +35,6 @@ func CreateBuildingSystem(world cardinal.WorldContext) error {
 					fmt.Errorf("failed to create building, this building doesn't fit this tiletype")
 			}
 
-			if err := SubtractResourcesToBuild(world, building, request.Tx.PersonaTag); err != nil {
-				return msg.CreateBuildingResult{Success: false}, err
-			}
-
 			tile := &(*playerMap.Tiles)[request.Msg.TileIndex]
 			if tile.Building == nil {
 				building.TileID = request.Msg.TileIndex
@@ -46,6 +42,11 @@ func CreateBuildingSystem(world cardinal.WorldContext) error {
 			} else {
 				return msg.CreateBuildingResult{Success: false},
 					fmt.Errorf("failed to create building, this tile already have another building")
+			}
+
+			resourcesForBuild := comp.BuildingConfigs[building.Type].Resources
+			if err := SubtractResources(world, resourcesForBuild, request.Tx.PersonaTag); err != nil {
+				return msg.CreateBuildingResult{Success: false}, err
 			}
 
 			player, _ := cardinal.GetComponent[comp.Player](world, mapEntityID)
@@ -77,7 +78,7 @@ func CreateBuildingSystem(world cardinal.WorldContext) error {
 		})
 }
 
-func SubtractResourcesToBuild(world cardinal.WorldContext, building comp.Building, personaTag string) error {
+func SubtractResources(world cardinal.WorldContext, resources []comp.Resource, personaTag string) error {
 	playerResourcesEntityID, playerResources, _ := QueryComponent[comp.PlayerResources](
 		world,
 		personaTag,
@@ -85,8 +86,7 @@ func SubtractResourcesToBuild(world cardinal.WorldContext, building comp.Buildin
 		filter.Component[comp.PlayerResources](),
 	)
 
-	resourcesToBuild := comp.BuildingConfigs[building.Type].Resources
-	for _, resource := range resourcesToBuild {
+	for _, resource := range resources {
 		var playerResource *comp.Resource
 		var err error
 		if playerResource, err = GetResourceByType(playerResources, resource.Type); err != nil {

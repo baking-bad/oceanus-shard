@@ -1,6 +1,7 @@
 package system
 
 import (
+	"errors"
 	"fmt"
 
 	"pkg.world.dev/world-engine/cardinal"
@@ -54,23 +55,35 @@ func CreateEffectSystem(world cardinal.WorldContext) error {
 					fmt.Errorf("failed to create effect, this building didn't have effect")
 			}
 
-			for i, building := range playerBuildingsWithEffect {
-				if building.TileID == tile.Building.TileID {
-					effectComponent, _ := cardinal.GetComponent[comp.Effect](world, playerBuildingsEntityIDs[i])
-					effectComponent.BuildingTimeStartedAt = world.Timestamp()
-					if err := cardinal.SetComponent(world, playerBuildingsEntityIDs[i], effectComponent); err != nil {
-						return msg.CreateEffectResult{Success: false}, fmt.Errorf("failed to create effect: %w", err)
-					}
+			building, i, err := FindBuildingByTileID(playerBuildingsWithEffect, tile.Building.TileID)
+			if err != nil {
+				return msg.CreateEffectResult{Success: false}, err
+			}
 
-					tile.Building.Effect = effectComponent
-					if err := cardinal.SetComponent(world, playerMapEntityID, playerMap); err != nil {
-						return msg.CreateEffectResult{Success: false}, fmt.Errorf("failed to create effect: %w", err)
-					}
+			effectComponent, _ := cardinal.GetComponent[comp.Effect](world, playerBuildingsEntityIDs[i])
+			effectComponent.BuildingTimeStartedAt = world.Timestamp()
+			resourcesForEffect := comp.BuildingConfigs[building.Type].Effect.Resources
+			if err := SubtractResources(world, resourcesForEffect, request.Tx.PersonaTag); err != nil {
+				return msg.CreateEffectResult{Success: false}, err
+			}
+			if err := cardinal.SetComponent(world, playerBuildingsEntityIDs[i], effectComponent); err != nil {
+				return msg.CreateEffectResult{Success: false}, fmt.Errorf("failed to create effect: %w", err)
+			}
 
-					break
-				}
+			tile.Building.Effect = effectComponent
+			if err := cardinal.SetComponent(world, playerMapEntityID, playerMap); err != nil {
+				return msg.CreateEffectResult{Success: false}, fmt.Errorf("failed to create effect: %w", err)
 			}
 
 			return msg.CreateEffectResult{Success: true}, nil
 		})
+}
+
+func FindBuildingByTileID(buildings []*comp.Building, tileID int) (*comp.Building, int, error) {
+	for index, building := range buildings {
+		if building.TileID == tileID {
+			return building, index, nil
+		}
+	}
+	return nil, -1, errors.New("building with given tileID not found")
 }
