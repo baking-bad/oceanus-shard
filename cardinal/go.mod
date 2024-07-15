@@ -28,7 +28,7 @@ require (
 	github.com/dgryski/go-rendezvous v0.0.0-20200823014737-9f7001d12a5f // indirect
 	github.com/dustin/go-humanize v1.0.1 // indirect
 	github.com/ebitengine/purego v0.6.0-alpha.5 // indirect
-	github.com/ethereum/go-ethereum v1.13.10 // indirect
+	github.com/ethereum/go-ethereum v1.13.15 // indirect
 	github.com/fasthttp/websocket v1.5.8 // indirect
 	github.com/fsnotify/fsnotify v1.7.0 // indirect
 	github.com/go-logr/logr v1.4.1 // indirect
