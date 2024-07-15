@@ -40,7 +40,7 @@ require (
 	github.com/goccy/go-json v0.10.2 // indirect
 	github.com/gofiber/contrib/socketio v1.0.0 // indirect
 	github.com/gofiber/contrib/websocket v1.3.0 // indirect
-	github.com/gofiber/fiber/v2 v2.52.2 // indirect
+	github.com/gofiber/fiber/v2 v2.52.5 // indirect
 	github.com/gofiber/swagger v0.1.14 // indirect
 	github.com/golang/protobuf v1.5.4 // indirect
 	github.com/google/go-cmp v0.6.0 // indirect
