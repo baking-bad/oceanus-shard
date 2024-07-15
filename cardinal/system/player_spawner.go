@@ -53,9 +53,9 @@ func PlayerSpawnerSystem(world cardinal.WorldContext) error {
 
 			var playerComponent = comp.Player{Nickname: create.Msg.Nickname}
 
-			resources := make([]comp.Resource, len(comp.GetAllResourceTypes()))
+			islandResources := make([]comp.Resource, len(comp.GetAllResourceTypes()))
 			for i, resourceType := range comp.GetAllResourceTypes() {
-				resources[i] = comp.Resource{
+				islandResources[i] = comp.Resource{
 					Type:   resourceType,
 					Amount: 0,
 				}
@@ -67,6 +67,14 @@ func PlayerSpawnerSystem(world cardinal.WorldContext) error {
 					Type:     effectType,
 					Amount:   0,
 					Capacity: comp.GetCapacityByEffectType(effectType),
+				}
+			}
+
+			shipWreckResources := make([]comp.Resource, len(comp.GetShipwreckResourceTypes()))
+			for i, resourceType := range comp.GetShipwreckResourceTypes() {
+				shipWreckResources[i] = comp.Resource{
+					Type:   resourceType,
+					Amount: comp.GetShipwreckDefaultResourceAmount(resourceType),
 				}
 			}
 
@@ -86,8 +94,11 @@ func PlayerSpawnerSystem(world cardinal.WorldContext) error {
 					Height: comp.MapHeight,
 				},
 				comp.PlayerResources{
-					Resources: resources,
+					Resources: islandResources,
 					Effects:   effects,
+				},
+				comp.ShipwreckResources{
+					Resources: shipWreckResources,
 				},
 				comp.Position{
 					Island:    islandCoordinates,

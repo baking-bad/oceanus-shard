@@ -39,6 +39,7 @@ func MustInitWorld(w *cardinal.World) {
 		cardinal.RegisterComponent[component.Farming](w),
 		cardinal.RegisterComponent[component.Building](w),
 		cardinal.RegisterComponent[component.PlayerResources](w),
+		cardinal.RegisterComponent[component.ShipwreckResources](w),
 		cardinal.RegisterComponent[component.TileMap](w),
 		cardinal.RegisterComponent[component.Position](w),
 		cardinal.RegisterComponent[component.Effect](w),
