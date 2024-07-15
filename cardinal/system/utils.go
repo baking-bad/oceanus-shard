@@ -143,3 +143,17 @@ func SetResourceByType(playerResources *comp.PlayerResources, newResource comp.R
 		}
 	}
 }
+
+func GetTotalPlayersAmount(world cardinal.WorldContext) (int, error) {
+	totalPlayers := 0
+	searchErr := cardinal.NewSearch().Entity(
+		filter.Contains(filter.Component[comp.Player](), filter.Component[comp.TileMap]())).Each(world,
+		func(_ types.EntityID) bool {
+			totalPlayers++
+			return true
+		})
+	if searchErr != nil {
+		return 0, searchErr
+	}
+	return totalPlayers, searchErr
+}

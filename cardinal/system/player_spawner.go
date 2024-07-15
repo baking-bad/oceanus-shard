@@ -9,6 +9,7 @@ import (
 	"pkg.world.dev/world-engine/cardinal"
 
 	comp "oceanus-shard/component"
+	"oceanus-shard/constants"
 	"oceanus-shard/msg"
 )
 
@@ -33,7 +34,6 @@ func PlayerSpawnerSystem(world cardinal.WorldContext) error {
 						return false
 					}
 
-					// Terminates the search if the player is found
 					if player.Nickname == create.Msg.Nickname {
 						playerExist = true
 						return false
@@ -70,6 +70,14 @@ func PlayerSpawnerSystem(world cardinal.WorldContext) error {
 				}
 			}
 
+			totalPlayers, _ := GetTotalPlayersAmount(world)
+			islandCoordinates := getIslandCoordinates(totalPlayers)
+			shipWreckCoordinates := getRandomPointOnCircle(
+				islandCoordinates[0],
+				islandCoordinates[1],
+				constants.ShipwreckDistanceFromIsland,
+			)
+
 			mapID, err := cardinal.Create(world,
 				playerComponent,
 				comp.TileMap{
@@ -80,6 +88,10 @@ func PlayerSpawnerSystem(world cardinal.WorldContext) error {
 				comp.PlayerResources{
 					Resources: resources,
 					Effects:   effects,
+				},
+				comp.Position{
+					Island:    islandCoordinates,
+					Shipwreck: shipWreckCoordinates,
 				},
 			)
 
