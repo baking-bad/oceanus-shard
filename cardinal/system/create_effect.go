@@ -14,14 +14,14 @@ import (
 func CreateEffectSystem(world cardinal.WorldContext) error {
 	return cardinal.EachMessage[msg.CreateEffectMsg, msg.CreateEffectResult](world,
 		func(request cardinal.TxData[msg.CreateEffectMsg]) (msg.CreateEffectResult, error) {
-			playerMapEntityID, playerMap, _ := QueryComponent[comp.TileMap](
+			playerMapEntityID, playerMap, _ := QueryPlayerComponent[comp.TileMap](
 				world,
 				request.Tx.PersonaTag,
 				filter.Component[comp.Player](),
 				filter.Component[comp.TileMap](),
 			)
 
-			playerBuildingsEntityIDs, playerBuildingsWithEffect, _ := QueryAllComponents[comp.Building](
+			playerBuildingsEntityIDs, playerBuildingsWithEffect, _ := QueryAllPlayerComponents[comp.Building](
 				world,
 				request.Tx.PersonaTag,
 				filter.Component[comp.Player](),

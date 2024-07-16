@@ -15,7 +15,7 @@ func CreateBuildingSystem(world cardinal.WorldContext) error {
 	return cardinal.EachMessage[msg.CreateBuildingMsg, msg.CreateBuildingResult](
 		world,
 		func(request cardinal.TxData[msg.CreateBuildingMsg]) (msg.CreateBuildingResult, error) {
-			mapEntityID, playerMap, _ := QueryComponent[comp.TileMap](
+			mapEntityID, playerMap, _ := QueryPlayerComponent[comp.TileMap](
 				world,
 				request.Tx.PersonaTag,
 				filter.Component[comp.Player](),

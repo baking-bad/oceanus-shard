@@ -70,6 +70,10 @@ func MustInitWorld(w *cardinal.World) {
 			query.PlayerResourcesRequest,
 			query.PlayerResourcesResponse,
 		](w, "player-resources", query.PlayerResources),
+		cardinal.RegisterQuery[
+			query.GlobalMapRequest,
+			[]query.GlobalMapResponse,
+		](w, "global-map", query.GlobalMap),
 	)
 
 	// Each system executes deterministically in the order they are added.

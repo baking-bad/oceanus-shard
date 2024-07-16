@@ -20,7 +20,7 @@ type MapStateResponse struct {
 }
 
 func PlayerMap(world cardinal.WorldContext, req *MapStateRequest) (*MapStateResponse, error) {
-	_, playerMap, err := system.QueryComponent[comp.TileMap](
+	_, playerMap, err := system.QueryPlayerComponent[comp.TileMap](
 		world,
 		req.Nickname,
 		filter.Component[comp.Player](),

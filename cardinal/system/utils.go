@@ -11,7 +11,7 @@ import (
 	"pkg.world.dev/world-engine/cardinal/types"
 )
 
-func QueryComponent[T types.Component](
+func QueryPlayerComponent[T types.Component](
 	world cardinal.WorldContext,
 	targetNickname string,
 	components ...filter.ComponentWrapper,
@@ -54,7 +54,7 @@ func QueryComponent[T types.Component](
 	return entityID, targetComponent, err
 }
 
-func QueryAllComponents[T types.Component](
+func QueryAllPlayerComponents[T types.Component](
 	world cardinal.WorldContext,
 	targetNickname string,
 	components ...filter.ComponentWrapper,
@@ -89,6 +89,35 @@ func QueryAllComponents[T types.Component](
 	return entityIDs, targetComponents, err
 }
 
+func QueryAllComponents[T types.Component](
+	world cardinal.WorldContext,
+	components ...filter.ComponentWrapper,
+) ([]types.EntityID, []*T, error) {
+	var entityIDs []types.EntityID
+	var targetComponents []*T
+	var err error
+
+	searchErr := cardinal.NewSearch().Entity(
+		filter.Contains(components...)).Each(world,
+		func(id types.EntityID) bool {
+			if err != nil {
+				return false
+			}
+
+			entityIDs = append(entityIDs, id)
+			targetComponent, _ := cardinal.GetComponent[T](world, id)
+			targetComponents = append(targetComponents, targetComponent)
+			return true
+		})
+	if searchErr != nil {
+		return nil, nil, err
+	}
+	if err != nil {
+		return nil, nil, err
+	}
+	return entityIDs, targetComponents, err
+}
+
 func FindBuildingByTileID(buildings []*comp.Building, tileID int) (*comp.Building, int, error) {
 	for index, building := range buildings {
 		if building.TileID == tileID {
@@ -99,7 +128,7 @@ func FindBuildingByTileID(buildings []*comp.Building, tileID int) (*comp.Buildin
 }
 
 func SubtractResources(world cardinal.WorldContext, resources []comp.Resource, personaTag string) error {
-	playerResourcesEntityID, playerResources, _ := QueryComponent[comp.PlayerResources](
+	playerResourcesEntityID, playerResources, _ := QueryPlayerComponent[comp.PlayerResources](
 		world,
 		personaTag,
 		filter.Component[comp.Player](),

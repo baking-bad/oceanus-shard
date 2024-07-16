@@ -25,14 +25,14 @@ func EffectsSpawnerSystem(world cardinal.WorldContext) error {
 					return true
 				}
 
-				playerMapEntityID, playerMap, _ := QueryComponent[comp.TileMap](
+				playerMapEntityID, playerMap, _ := QueryPlayerComponent[comp.TileMap](
 					world,
 					playerComponent.Nickname,
 					filter.Component[comp.Player](),
 					filter.Component[comp.PlayerResources](),
 				)
 
-				playerResourcesEntityID, playerResources, _ := QueryComponent[comp.PlayerResources](
+				playerResourcesEntityID, playerResources, _ := QueryPlayerComponent[comp.PlayerResources](
 					world,
 					playerComponent.Nickname,
 					filter.Component[comp.Player](),

@@ -15,14 +15,14 @@ func DeleteBuildingSystem(world cardinal.WorldContext) error {
 	return cardinal.EachMessage[msg.DeleteBuildingMsg, msg.DeleteBuildingResult](
 		world,
 		func(request cardinal.TxData[msg.DeleteBuildingMsg]) (msg.DeleteBuildingResult, error) {
-			mapEntityID, playerMap, _ := QueryComponent[comp.TileMap](
+			mapEntityID, playerMap, _ := QueryPlayerComponent[comp.TileMap](
 				world,
 				request.Tx.PersonaTag,
 				filter.Component[comp.Player](),
 				filter.Component[comp.TileMap](),
 			)
 
-			buildingsEntityIDs, playerBuildings, _ := QueryAllComponents[comp.Building](
+			buildingsEntityIDs, playerBuildings, _ := QueryAllPlayerComponents[comp.Building](
 				world,
 				request.Tx.PersonaTag,
 				filter.Component[comp.Player](),

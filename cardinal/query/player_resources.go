@@ -20,21 +20,21 @@ type PlayerResourcesResponse struct {
 }
 
 func PlayerResources(world cardinal.WorldContext, req *PlayerResourcesRequest) (*PlayerResourcesResponse, error) {
-	_, playerResources, _ := system.QueryComponent[comp.PlayerResources](
+	_, playerResources, _ := system.QueryPlayerComponent[comp.PlayerResources](
 		world,
 		req.Nickname,
 		filter.Component[comp.Player](),
 		filter.Component[comp.PlayerResources](),
 	)
 
-	_, farmingComponents, _ := system.QueryAllComponents[comp.Farming](
+	_, farmingComponents, _ := system.QueryAllPlayerComponents[comp.Farming](
 		world,
 		req.Nickname,
 		filter.Component[comp.Building](),
 		filter.Component[comp.Farming](),
 	)
 
-	_, allBuildings, err := system.QueryAllComponents[comp.Building](
+	_, allBuildings, err := system.QueryAllPlayerComponents[comp.Building](
 		world,
 		req.Nickname,
 		filter.Component[comp.Building](),

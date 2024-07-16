@@ -19,14 +19,14 @@ func FarmingSystem(world cardinal.WorldContext) error {
 			playerComponent, _ := cardinal.GetComponent[comp.Player](world, id)
 			farmingComponent, _ := cardinal.GetComponent[comp.Farming](world, id)
 
-			playerEntityID, playerResources, _ := QueryComponent[comp.PlayerResources](
+			playerEntityID, playerResources, _ := QueryPlayerComponent[comp.PlayerResources](
 				world,
 				playerComponent.Nickname,
 				filter.Component[comp.Player](),
 				filter.Component[comp.PlayerResources](),
 			)
 
-			_, playerBuildings, err := QueryAllComponents[comp.Building](
+			_, playerBuildings, err := QueryAllPlayerComponents[comp.Building](
 				world,
 				playerComponent.Nickname,
 				filter.Component[comp.Player](),
