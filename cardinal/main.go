@@ -39,7 +39,9 @@ func MustInitWorld(w *cardinal.World) {
 		cardinal.RegisterComponent[component.Farming](w),
 		cardinal.RegisterComponent[component.Building](w),
 		cardinal.RegisterComponent[component.PlayerResources](w),
+		cardinal.RegisterComponent[component.ShipwreckResources](w),
 		cardinal.RegisterComponent[component.TileMap](w),
+		cardinal.RegisterComponent[component.Position](w),
 		cardinal.RegisterComponent[component.Effect](w),
 	)
 
@@ -68,6 +70,10 @@ func MustInitWorld(w *cardinal.World) {
 			query.PlayerResourcesRequest,
 			query.PlayerResourcesResponse,
 		](w, "player-resources", query.PlayerResources),
+		cardinal.RegisterQuery[
+			query.GlobalMapRequest,
+			[]query.GlobalMapResponse,
+		](w, "global-map", query.GlobalMap),
 	)
 
 	// Each system executes deterministically in the order they are added.

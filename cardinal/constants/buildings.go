@@ -46,3 +46,5 @@ const (
 	UnitLimitHouseResourcesStoneAmount = 100
 	UnitLimitHouseUnitLimit            = 15
 )
+
+const ShipwreckDistanceFromIsland = 0.8

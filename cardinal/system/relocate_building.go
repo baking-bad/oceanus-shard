@@ -15,14 +15,14 @@ func RelocateBuildingSystem(world cardinal.WorldContext) error {
 	return cardinal.EachMessage[msg.RelocateBuildingMsg, msg.RelocateBuildingResult](
 		world,
 		func(request cardinal.TxData[msg.RelocateBuildingMsg]) (msg.RelocateBuildingResult, error) {
-			mapEntityID, playerMap, _ := QueryComponent[comp.TileMap](
+			mapEntityID, playerMap, _ := QueryPlayerComponent[comp.TileMap](
 				world,
 				request.Tx.PersonaTag,
 				filter.Component[comp.Player](),
 				filter.Component[comp.TileMap](),
 			)
 
-			playerBuildingsEntityIDs, playerBuildings, _ := QueryAllComponents[comp.Building](
+			playerBuildingsEntityIDs, playerBuildings, _ := QueryAllPlayerComponents[comp.Building](
 				world,
 				request.Tx.PersonaTag,
 				filter.Component[comp.Player](),
