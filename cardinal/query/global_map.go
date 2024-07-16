@@ -17,7 +17,7 @@ type GlobalMapResponse struct {
 }
 
 type ResourcePoint struct {
-	Position  [2]int          `json:"position"`
+	Position  [2]float64      `json:"position"`
 	Resources []comp.Resource `json:"resources"`
 }
 
@@ -43,7 +43,7 @@ func GlobalMap(world cardinal.WorldContext, _ *GlobalMapRequest) (*[]GlobalMapRe
 				Resources: playerResources.Resources,
 			},
 			Shipwreck: ResourcePoint{
-				Position:  position.Island,
+				Position:  position.Shipwreck,
 				Resources: shipwreckResources.Resources,
 			},
 		}

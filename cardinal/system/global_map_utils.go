@@ -32,28 +32,28 @@ func getNextDirection(current Direction) (next Direction) {
 	}
 }
 
-func getNextPointPosition(currentDirection Direction, currentPoint [2]int) (nextPoint [2]int) {
+func getNextPointPosition(currentDirection Direction, currentPoint [2]float64) (nextPoint [2]float64) {
 	switch currentDirection {
 	case Left:
-		return [2]int{currentPoint[0] - 1, currentPoint[1]}
+		return [2]float64{currentPoint[0] - 1, currentPoint[1]}
 	case Top:
-		return [2]int{currentPoint[0], currentPoint[1] + 1}
+		return [2]float64{currentPoint[0], currentPoint[1] + 1}
 	case Right:
-		return [2]int{currentPoint[0] + 1, currentPoint[1]}
+		return [2]float64{currentPoint[0] + 1, currentPoint[1]}
 	case Bottom:
-		return [2]int{currentPoint[0], currentPoint[1] - 1}
+		return [2]float64{currentPoint[0], currentPoint[1] - 1}
 	default:
 		err := errors.New("unexpected Direction value")
 		panic(err)
 	}
 }
 
-func getIslandCoordinates(n int) [2]int {
+func getIslandCoordinates(n int) [2]float64 {
 	objectsInRow := InitialRowLength
 	direction := Left
 	currentIslandsInRow := 0
-	points := make([][2]int, 0, n)
-	points = append(points, [2]int{0, 0})
+	points := make([][2]float64, 0, n)
+	points = append(points, [2]float64{0, 0})
 	for range n {
 		if currentIslandsInRow == objectsInRow {
 			direction = getNextDirection(direction)
