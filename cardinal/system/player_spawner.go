@@ -56,7 +56,7 @@ func PlayerSpawnerSystem(world cardinal.WorldContext) error {
 			if err != nil {
 				return msg.CreatePlayerResult{Success: false}, err
 			}
-			return msg.CreatePlayerResult{Success: true}, nil
+			return msg.CreatePlayerResult{Success: true}, err
 		})
 }
 
@@ -68,15 +68,6 @@ func createPlayerData(world cardinal.WorldContext, nickname string) error {
 		islandResources[i] = comp.Resource{
 			Type:   resourceType,
 			Amount: 0,
-		}
-	}
-
-	effects := make([]comp.Effect, len(comp.GetAllEffectTypes()))
-	for i, effectType := range comp.GetAllEffectTypes() {
-		effects[i] = comp.Effect{
-			Type:     effectType,
-			Amount:   0,
-			Capacity: comp.GetCapacityByEffectType(effectType),
 		}
 	}
 
@@ -105,7 +96,7 @@ func createPlayerData(world cardinal.WorldContext, nickname string) error {
 		},
 		comp.PlayerResources{
 			Resources: islandResources,
-			Effects:   effects,
+			Ships:     []comp.Ship{},
 		},
 		comp.ShipwreckResources{
 			Resources: shipWreckResources,

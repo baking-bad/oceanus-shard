@@ -15,7 +15,7 @@ type PlayerResourcesRequest struct {
 
 type PlayerResourcesResponse struct {
 	Resources []comp.Resource `json:"resources"`
-	Effects   []comp.Effect   `json:"effects"`
+	Ships     []comp.Ship     `json:"ships"`
 	Farming   []comp.Farming  `json:"farming"`
 }
 
@@ -34,7 +34,7 @@ func PlayerResources(world cardinal.WorldContext, req *PlayerResourcesRequest) (
 		filter.Component[comp.Farming](),
 	)
 
-	_, allBuildings, err := system.QueryAllPlayerComponents[comp.Building](
+	_, allBuildings, _ := system.QueryAllPlayerComponents[comp.Building](
 		world,
 		req.Nickname,
 		filter.Component[comp.Building](),
@@ -58,13 +58,8 @@ func PlayerResources(world cardinal.WorldContext, req *PlayerResourcesRequest) (
 		})
 	}
 
-	effectsMap := make(map[comp.EffectType]int)
 	capacity := 0
 	for _, building := range allBuildings {
-		if building.Effect != nil {
-			effectsMap[building.Effect.Type] += comp.BuildingConfigs[building.Type].Effect.Capacity
-		}
-
 		capacity += building.StorageCapacity
 	}
 
@@ -74,15 +69,21 @@ func PlayerResources(world cardinal.WorldContext, req *PlayerResourcesRequest) (
 		resourcesResponse = append(resourcesResponse, resource)
 	}
 
-	effectsResponse := make([]comp.Effect, 0, len(playerResources.Effects))
-	for _, effect := range playerResources.Effects {
-		effect.Capacity = effectsMap[effect.Type]
-		effectsResponse = append(effectsResponse, effect)
+	_, allShips, err := system.QueryAllPlayerComponents[comp.Ship](
+		world,
+		req.Nickname,
+		filter.Component[comp.Ship](),
+		filter.Component[comp.Player](),
+	)
+
+	allShipsResponse := make([]comp.Ship, 0, len(allShips))
+	for _, ship := range allShips {
+		allShipsResponse = append(allShipsResponse, *ship)
 	}
 
 	return &PlayerResourcesResponse{
 		Resources: resourcesResponse,
-		Effects:   effectsResponse,
+		Ships:     allShipsResponse,
 		Farming:   aggregatedfarmingSlice,
 	}, err
 }

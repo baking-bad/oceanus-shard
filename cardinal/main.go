@@ -42,7 +42,7 @@ func MustInitWorld(w *cardinal.World) {
 		cardinal.RegisterComponent[component.ShipwreckResources](w),
 		cardinal.RegisterComponent[component.TileMap](w),
 		cardinal.RegisterComponent[component.Position](w),
-		cardinal.RegisterComponent[component.Effect](w),
+		cardinal.RegisterComponent[component.Ship](w),
 	)
 
 	// Register messages (user action)
@@ -51,7 +51,7 @@ func MustInitWorld(w *cardinal.World) {
 		cardinal.RegisterMessage[msg.CreatePlayerMsg, msg.CreatePlayerResult](w, "create-player"),
 		cardinal.RegisterMessage[msg.CreateBuildingMsg, msg.CreateBuildingResult](w, "create-building"),
 		cardinal.RegisterMessage[msg.DeleteBuildingMsg, msg.DeleteBuildingResult](w, "delete-building"),
-		cardinal.RegisterMessage[msg.CreateEffectMsg, msg.CreateEffectResult](w, "create-effect"),
+		cardinal.RegisterMessage[msg.CreateShipMsg, msg.CreateShipResult](w, "create-ship"),
 		cardinal.RegisterMessage[msg.RelocateBuildingMsg, msg.RelocateBuildingResult](w, "relocate-building"),
 	)
 
@@ -85,8 +85,8 @@ func MustInitWorld(w *cardinal.World) {
 		system.PlayerSpawnerSystem,
 		system.CreateBuildingSystem,
 		system.DeleteBuildingSystem,
-		system.CreateEffectSystem,
-		system.EffectsSpawnerSystem,
+		system.CreateShipSystem,
+		system.ShipsSpawnerSystem,
 		system.RelocateBuildingSystem,
 	))
 }

@@ -68,11 +68,6 @@ func CreateBuildingSystem(world cardinal.WorldContext) error {
 				_ = cardinal.SetComponent(world, buildingEntityID, farmingComponent)
 			}
 
-			if building.Effect != nil {
-				_ = cardinal.AddComponentTo[comp.Effect](world, buildingEntityID)
-				_ = cardinal.SetComponent(world, buildingEntityID, building.Effect)
-			}
-
 			return msg.CreateBuildingResult{Success: true}, nil
 		})
 }

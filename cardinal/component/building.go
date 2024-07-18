@@ -29,18 +29,32 @@ func GetAllBuildingTypes() []BuildingType {
 	}
 }
 
+type BuildingShip struct {
+	Type                  ShipType `json:"shipType"`
+	BuildingTimeSeconds   int      `json:"buildingTimeSeconds"`
+	BuildingTimeStartedAt uint64   `json:"buildingTimeStartedAt"`
+}
+
 type Building struct {
-	TileID          int          `json:"tileID"`
-	Level           int          `json:"level"`
-	Type            BuildingType `json:"type"`
-	Farming         *Farming     `json:"farming,omitempty"`
-	Effect          *Effect      `json:"effect,omitempty"`
-	UnitLimit       int          `json:"unitLimit,omitempty"`
-	StorageCapacity int          `json:"storageCapacity,omitempty"`
+	TileID          int           `json:"tileID"`
+	Level           int           `json:"level"`
+	Type            BuildingType  `json:"type"`
+	Farming         *Farming      `json:"farming,omitempty"`
+	BuildingShip    *BuildingShip `json:"buildingShip,omitempty"`
+	UnitLimit       int           `json:"unitLimit,omitempty"`
+	StorageCapacity int           `json:"storageCapacity,omitempty"`
 }
 
 func (Building) Name() string {
 	return "Building"
+}
+
+type BuildingShipConstants struct {
+	Type                ShipType     `json:"type"`
+	BuildingType        BuildingType `json:"buildingType"`
+	MaxAmount           int          `json:"maxAmount"`
+	BuildResources      []Resource   `json:"buildResources"`
+	BuildingTimeSeconds int          `json:"buildingTimeSeconds"`
 }
 
 type BuildingConstants struct {
@@ -49,7 +63,7 @@ type BuildingConstants struct {
 	StorageCapacity int
 	Resources       []Resource
 	Farming         *Farming
-	Effect          *Effect
+	ShipsInfo       *map[ShipType]BuildingShipConstants
 	TileType        TileType
 }
 
@@ -96,16 +110,8 @@ var BuildingConfigs = map[BuildingType]BuildingConstants{
 			{Type: Stone, Amount: constants.ShipyardResourcesStoneAmount},
 			{Type: Fish, Amount: constants.ShipyardResourcesFishAmount},
 		},
-		Effect: &Effect{
-			Type:     Raft,
-			Capacity: constants.ShipyardEffectRaftCapacity,
-			Resources: []Resource{
-				{Type: Wood, Amount: constants.ShipyardEffectRaftResourceWood},
-				{Type: Fish, Amount: constants.ShipyardEffectRaftResourceFish},
-			},
-			BuildingTimeSeconds: constants.ShipyardEffectRaftBuildSeconds,
-		},
-		TileType: CoastlineTile,
+		ShipsInfo: GetAllBuildingShipConstants(),
+		TileType:  CoastlineTile,
 	},
 	Warehouse: {
 		Resources: []Resource{
@@ -158,9 +164,9 @@ func GetBuilding(buildingType BuildingType) (Building, error) {
 		}, nil
 	case Shipyard:
 		return Building{
-			Level:  1,
-			Type:   buildingType,
-			Effect: config.Effect,
+			Level: 1,
+			Type:  buildingType,
+			// Ship:  config.Ship,
 		}, nil
 	case Warehouse:
 		return Building{
