@@ -23,7 +23,6 @@ func SailShip(world cardinal.WorldContext) error {
 				return true
 			}
 
-			// playerComponent, _ := cardinal.GetComponent[comp.Player](world, id)
 			buildingComponent, _ := cardinal.GetComponent[comp.Building](world, id)
 			RaftTravelDistancePerTick := constants.RaftTravelSpeedPerMinute / time.Minute.Seconds() * constants.TickRate.Seconds()
 
@@ -33,14 +32,7 @@ func SailShip(world cardinal.WorldContext) error {
 				RaftTravelDistancePerTick,
 			)
 
-			if buildingComponent.Effect.Position == *buildingComponent.Effect.TargetPosition {
-				buildingComponent.Effect.TargetPosition = nil
-			}
-
-			if err := cardinal.SetComponent(world, id, buildingComponent); err != nil {
-				return true
-			}
-
+			updateEffect(world, id, buildingComponent.Effect)
 			return true
 		})
 }

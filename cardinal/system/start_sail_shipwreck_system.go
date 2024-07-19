@@ -16,12 +16,14 @@ func StartSailShipwreckSystem(world cardinal.WorldContext) error {
 	return cardinal.EachMessage[msg.SailShipwreckMsg, msg.SailShipWreckResult](
 		world,
 		func(request cardinal.TxData[msg.SailShipwreckMsg]) (msg.SailShipWreckResult, error) {
-			mapEntityID, playerMap, _ := QueryPlayerComponent[comp.TileMap](
+			mapEntityID, playerPosition, _ := QueryPlayerComponent[comp.Position](
 				world,
 				request.Tx.PersonaTag,
 				filter.Component[comp.Player](),
 				filter.Component[comp.TileMap](),
 			)
+
+			player, _ := cardinal.GetComponent[comp.Player](world, mapEntityID)
 
 			_, targetPlayerPosition, err := QueryPlayerComponent[comp.Position](
 				world,
@@ -41,13 +43,11 @@ func StartSailShipwreckSystem(world cardinal.WorldContext) error {
 				filter.Component[comp.Building](),
 			)
 
-			if playerMap == nil {
+			if playerPosition == nil {
 				return msg.SailShipWreckResult{Success: false},
 					fmt.Errorf("failed to sail shipwreck, this player did not have tilemap")
 			}
 
-			player, _ := cardinal.GetComponent[comp.Player](world, mapEntityID)
-			playerPosition, _ := cardinal.GetComponent[comp.Position](world, mapEntityID)
 			if player.Nickname != request.Tx.PersonaTag {
 				return msg.SailShipWreckResult{Success: false}, fmt.Errorf("can't sail another player building")
 			}
@@ -73,17 +73,10 @@ func StartSailShipwreckSystem(world cardinal.WorldContext) error {
 			}
 
 			shipyard.Effect.TargetPosition = &targetPlayerPosition.Shipwreck
-			tile := &(*playerMap.Tiles)[shipyard.TileID]
-			tile.Building = shipyard
-
-			if err := cardinal.SetComponent(world, shipyardEntityID, shipyard); err != nil {
+			err = updateEffect(world, shipyardEntityID, shipyard.Effect)
+			if err != nil {
 				return msg.SailShipWreckResult{Success: false}, err
 			}
-
-			if err := cardinal.SetComponent(world, mapEntityID, playerMap); err != nil {
-				return msg.SailShipWreckResult{Success: false}, err
-			}
-
 			return msg.SailShipWreckResult{Success: true}, nil
 		})
 }
