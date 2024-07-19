@@ -3,6 +3,7 @@ package system
 import (
 	"fmt"
 
+	"github.com/google/uuid"
 	"pkg.world.dev/world-engine/cardinal"
 	"pkg.world.dev/world-engine/cardinal/search/filter"
 
@@ -69,6 +70,9 @@ func CreateBuildingSystem(world cardinal.WorldContext) error {
 			}
 
 			if building.Effect != nil {
+				building.Effect.Player = request.Tx.PersonaTag
+				building.Effect.ID = uuid.New().String()
+
 				_ = cardinal.AddComponentTo[comp.Effect](world, buildingEntityID)
 				_ = cardinal.SetComponent(world, buildingEntityID, building.Effect)
 			}

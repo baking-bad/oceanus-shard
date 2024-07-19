@@ -24,13 +24,16 @@ func GetCapacityByEffectType(effectType EffectType) int {
 }
 
 type Effect struct {
-	Type                  EffectType `json:"type"`
-	Amount                int        `json:"amount"`
-	Capacity              int        `json:"capacity"`
-	Resources             []Resource `json:"resources,omitempty"`
-	Position              [2]float64 `json:"position,omitempty"`
-	BuildingTimeSeconds   int        `json:"buildingTimeSeconds,omitempty"`
-	BuildingTimeStartedAt uint64     `json:"buildingTimeStartedAt,omitempty"`
+	ID                    string      `json:"id"`
+	Player                string      `json:"player"`
+	Type                  EffectType  `json:"type"`
+	Amount                int         `json:"amount"`
+	Capacity              int         `json:"capacity"`
+	Resources             []Resource  `json:"resources,omitempty"`
+	Position              [2]float64  `json:"position,omitempty"`
+	TargetPosition        *[2]float64 `json:"targetPosition,omitempty"`
+	BuildingTimeSeconds   int         `json:"buildingTimeSeconds,omitempty"`
+	BuildingTimeStartedAt uint64      `json:"buildingTimeStartedAt,omitempty"`
 }
 
 func (Effect) Name() string {

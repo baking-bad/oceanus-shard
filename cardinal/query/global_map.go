@@ -11,9 +11,10 @@ import (
 type GlobalMapRequest struct{}
 
 type GlobalMapResponse struct {
-	Player    string        `json:"player"`
-	Island    ResourcePoint `json:"island"`
-	Shipwreck ResourcePoint `json:"shipwreck"`
+	Player    string         `json:"player"`
+	Island    ResourcePoint  `json:"island"`
+	Shipwreck ResourcePoint  `json:"shipwreck"`
+	Ships     *[]comp.Effect `json:"ships"`
 }
 
 type ResourcePoint struct {
