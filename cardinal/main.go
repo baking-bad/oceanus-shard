@@ -53,6 +53,7 @@ func MustInitWorld(w *cardinal.World) {
 		cardinal.RegisterMessage[msg.DeleteBuildingMsg, msg.DeleteBuildingResult](w, "delete-building"),
 		cardinal.RegisterMessage[msg.CreateEffectMsg, msg.CreateEffectResult](w, "create-effect"),
 		cardinal.RegisterMessage[msg.RelocateBuildingMsg, msg.RelocateBuildingResult](w, "relocate-building"),
+		cardinal.RegisterMessage[msg.SailShipwreckMsg, msg.SailShipWreckResult](w, "sail-shipwreck"),
 	)
 
 	// Register queries
@@ -74,6 +75,10 @@ func MustInitWorld(w *cardinal.World) {
 			query.GlobalMapRequest,
 			[]query.GlobalMapResponse,
 		](w, "global-map", query.GlobalMap),
+		cardinal.RegisterQuery[
+			query.AllShipsRequest,
+			map[string]component.Effect,
+		](w, "all-ships", query.AllShips),
 	)
 
 	// Each system executes deterministically in the order they are added.
@@ -88,6 +93,8 @@ func MustInitWorld(w *cardinal.World) {
 		system.CreateEffectSystem,
 		system.EffectsSpawnerSystem,
 		system.RelocateBuildingSystem,
+		system.StartSailShipwreckSystem,
+		system.SailShip,
 	))
 }
 

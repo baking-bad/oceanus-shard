@@ -47,11 +47,14 @@ func EffectsSpawnerSystem(world cardinal.WorldContext) error {
 					return true
 				}
 
+				mapPosition, _ := cardinal.GetComponent[comp.Position](world, playerMapEntityID)
+
 				effectComponent.Amount = min(
 					constants.ShipyardEffectRaftCapacity,
 					effectComponent.Amount+1,
 				)
 				effectComponent.BuildingTimeStartedAt = 0
+				effectComponent.Position = mapPosition.Island
 				buildingComponent.Effect = effectComponent
 				tile := &(*playerMap.Tiles)[buildingComponent.TileID]
 				tile.Building = buildingComponent
