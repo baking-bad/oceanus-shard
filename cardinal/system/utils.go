@@ -188,6 +188,7 @@ func GetTotalPlayersAmount(world cardinal.WorldContext) (int, error) {
 }
 
 func updateEffect(world cardinal.WorldContext, buildingEntityID types.EntityID, effect *comp.Effect) error {
+
 	building, _ := cardinal.GetComponent[comp.Building](world, buildingEntityID)
 	player, _ := cardinal.GetComponent[comp.Player](world, buildingEntityID)
 	mapEntityID, playerMap, _ := QueryPlayerComponent[comp.TileMap](
@@ -200,11 +201,12 @@ func updateEffect(world cardinal.WorldContext, buildingEntityID types.EntityID, 
 	building.Effect = effect
 	tile := &(*playerMap.Tiles)[building.TileID]
 	tile.Building = building
-
+	if err := cardinal.SetComponent(world, buildingEntityID, effect); err != nil {
+		return err
+	}
 	if err := cardinal.SetComponent(world, buildingEntityID, building); err != nil {
 		return err
 	}
-
 	if err := cardinal.SetComponent(world, mapEntityID, playerMap); err != nil {
 		return err
 	}

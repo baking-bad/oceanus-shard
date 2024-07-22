@@ -71,8 +71,8 @@ func StartSailShipwreckSystem(world cardinal.WorldContext) error {
 			if shipyard == nil {
 				return msg.SailShipWreckResult{Success: false}, fmt.Errorf("player didn't have ships on base")
 			}
-
-			shipyard.Effect.TargetPosition = &targetPlayerPosition.Shipwreck
+			shipyardEffect := shipyard.Effect
+			shipyardEffect.TargetPosition = &targetPlayerPosition.Shipwreck
 			err = updateEffect(world, shipyardEntityID, shipyard.Effect)
 			if err != nil {
 				return msg.SailShipWreckResult{Success: false}, err

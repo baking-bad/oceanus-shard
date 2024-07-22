@@ -3,6 +3,7 @@ module oceanus-shard
 go 1.22.1
 
 require (
+	github.com/google/uuid v1.6.0
 	github.com/rs/zerolog v1.32.0
 	golang.org/x/exp v0.0.0-20231110203233-9a3e6036ecaa
 	pkg.world.dev/world-engine/cardinal v1.5.1
@@ -46,7 +47,6 @@ require (
 	github.com/golang/protobuf v1.5.4 // indirect
 	github.com/google/go-cmp v0.6.0 // indirect
 	github.com/google/pprof v0.0.0-20230901174712-0191c66da455 // indirect
-	github.com/google/uuid v1.6.0 // indirect
 	github.com/hashicorp/errwrap v1.1.0 // indirect
 	github.com/hashicorp/go-multierror v1.1.1 // indirect
 	github.com/hashicorp/hcl v1.0.1-vault-5 // indirect
