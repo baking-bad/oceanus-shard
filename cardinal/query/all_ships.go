@@ -8,12 +8,10 @@ import (
 	"pkg.world.dev/world-engine/cardinal/search/filter"
 )
 
-type AllShipsRequest struct {
-	Nickname string
-}
+type AllShipsRequest struct{}
 
 // AllShips -
-func AllShips(world cardinal.WorldContext, req *AllShipsRequest) (*map[string]comp.Effect, error) {
+func AllShips(world cardinal.WorldContext, _ *AllShipsRequest) (*map[string]comp.Effect, error) {
 	_, effects, err := system.QueryAllComponents[comp.Effect](
 		world,
 		filter.Component[comp.Player](),

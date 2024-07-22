@@ -24,15 +24,19 @@ func SailShip(world cardinal.WorldContext) error {
 			}
 
 			buildingComponent, _ := cardinal.GetComponent[comp.Building](world, id)
-			RaftTravelDistancePerTick := constants.RaftTravelSpeedPerMinute / time.Minute.Seconds() * constants.TickRate.Seconds()
+			raftTravelDistancePerTick :=
+				constants.RaftTravelSpeedPerMinute / time.Minute.Seconds() * constants.TickRate.Seconds()
 
 			buildingComponent.Effect.Position = findPointAtDistance(
 				buildingComponent.Effect.Position,
 				*buildingComponent.Effect.TargetPosition,
-				RaftTravelDistancePerTick,
+				raftTravelDistancePerTick,
 			)
 
-			updateEffect(world, id, buildingComponent.Effect)
+			err := updateEffect(world, id, buildingComponent.Effect)
+			if err != nil {
+				return true
+			}
 			return true
 		})
 }
