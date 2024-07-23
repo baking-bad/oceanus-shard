@@ -30,6 +30,8 @@ type Effect struct {
 	Amount                int         `json:"amount"`
 	Capacity              int         `json:"capacity"`
 	Resources             []Resource  `json:"resources,omitempty"`
+	LootResources         *[]Resource `json:"lootResources,omitempty"`
+	Speed                 float64     `json:"speed"`
 	Position              [2]float64  `json:"position,omitempty"`
 	TargetPosition        *[2]float64 `json:"targetPosition,omitempty"`
 	BuildingTimeSeconds   int         `json:"buildingTimeSeconds,omitempty"`

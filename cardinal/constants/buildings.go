@@ -1,5 +1,7 @@
 package constants
 
+import "time"
+
 const (
 	MainTileID    = 22
 	MainUnitLimit = 5
@@ -51,4 +53,7 @@ const (
 	UnitLimitHouseUnitLimit            = 15
 )
 
-const ShipwreckDistanceFromIsland = 0.4
+const (
+	ShipwreckDistanceFromIsland       = 0.4
+	ShipwreckResourcesRespawnInterval = time.Hour
+)
