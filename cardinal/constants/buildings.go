@@ -55,5 +55,5 @@ const (
 
 const (
 	ShipwreckDistanceFromIsland       = 0.4
-	ShipwreckResourcesRespawnInterval = time.Minute
+	ShipwreckResourcesRespawnInterval = time.Minute * 10
 )
