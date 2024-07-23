@@ -18,7 +18,6 @@ func SailShip(world cardinal.WorldContext) error {
 		filter.Contains(filter.Component[comp.Building](), filter.Component[comp.Effect]())).
 		Each(world, func(id types.EntityID) bool {
 			effectComponent, _ := cardinal.GetComponent[comp.Effect](world, id)
-
 			if effectComponent.Amount == 0 || effectComponent.TargetPosition == nil {
 				return true
 			}
@@ -32,6 +31,22 @@ func SailShip(world cardinal.WorldContext) error {
 				*buildingComponent.Effect.TargetPosition,
 				raftTravelDistancePerTick,
 			)
+
+			_, playerPosition, _ := QueryPlayerComponent[comp.Position](
+				world,
+				buildingComponent.Effect.Player,
+				filter.Component[comp.Player](),
+				filter.Component[comp.TileMap](),
+				filter.Component[comp.Position](),
+			)
+
+			if buildingComponent.Effect.Position == playerPosition.Island {
+				buildingComponent.Effect.TargetPosition = nil
+				_ = unloadShip(world, buildingComponent.Effect)
+			} else if buildingComponent.Effect.Position == *buildingComponent.Effect.TargetPosition {
+				buildingComponent.Effect.TargetPosition = &playerPosition.Island
+				_ = lootShipwreck(world, buildingComponent.Effect)
+			}
 
 			err := updateEffect(world, id, buildingComponent.Effect)
 			if err != nil {
@@ -61,4 +76,51 @@ func findPointAtDistance(start, end [2]float64, distance float64) [2]float64 {
 	newY := y1 + unitDy*distance
 
 	return [2]float64{newX, newY}
+}
+
+func lootShipwreck(world cardinal.WorldContext, effect *comp.Effect) error {
+	playerPositionsIDs, playerPositions, _ := QueryAllComponents[comp.Position](
+		world,
+		filter.Component[comp.Player](),
+		filter.Component[comp.TileMap](),
+		filter.Component[comp.Position](),
+	)
+
+	var shipwreckResources *comp.ShipwreckResources
+	var playerMapEntityID types.EntityID
+	for i, position := range playerPositions {
+		if position.Shipwreck == effect.Position {
+			playerMapEntityID = playerPositionsIDs[i]
+			shipwreckResources, _ = cardinal.GetComponent[comp.ShipwreckResources](world, playerMapEntityID)
+			break
+		}
+	}
+
+	effect.LootResources = shipwreckResources.Resources
+	shipwreckResources.Resources = nil
+	if err := cardinal.SetComponent(world, playerMapEntityID, shipwreckResources); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func unloadShip(world cardinal.WorldContext, effect *comp.Effect) error {
+	playerResourcesID, playerResources, _ := QueryPlayerComponent[comp.PlayerResources](
+		world,
+		effect.Player,
+		filter.Component[comp.Player](),
+		filter.Component[comp.TileMap](),
+		filter.Component[comp.PlayerResources](),
+	)
+
+	var err error
+	for _, lootResource := range *effect.LootResources {
+		playerResource, _ := GetResourceByType(playerResources, lootResource.Type)
+		playerResource.Amount += lootResource.Amount
+		SetResourceByType(playerResources, *playerResource)
+		err = cardinal.SetComponent(world, playerResourcesID, playerResources)
+	}
+	effect.LootResources = nil
+	return err
 }

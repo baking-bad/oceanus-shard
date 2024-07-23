@@ -95,6 +95,7 @@ func MustInitWorld(w *cardinal.World) {
 		system.RelocateBuildingSystem,
 		system.StartSailShipwreckSystem,
 		system.SailShip,
+		system.ShipwreckResourcesSpawner,
 	))
 }
 

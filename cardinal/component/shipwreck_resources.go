@@ -7,7 +7,8 @@ import (
 )
 
 type ShipwreckResources struct {
-	Resources []Resource `json:"resources"`
+	Resources     *[]Resource `json:"resources"`
+	LastSpawnTime uint64      `json:"lastSpawnTime"`
 }
 
 func GetShipwreckResourceTypes() []ResourceType {

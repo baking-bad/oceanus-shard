@@ -1,16 +1,16 @@
 package constants
 
 const (
-	ShipwreckMinWoodAmount = 5
-	ShipwreckMaxWoodAmount = 10
+	ShipwreckMinWoodAmount = 50
+	ShipwreckMaxWoodAmount = 100
 )
 
 const (
-	ShipwreckMinStoneAmount = 5
-	ShipwreckMaxStoneAmount = 10
+	ShipwreckMinStoneAmount = 50
+	ShipwreckMaxStoneAmount = 100
 )
 
 const (
-	ShipwreckMinFishAmount = 5
-	ShipwreckMaxFishAmount = 10
+	ShipwreckMinFishAmount = 50
+	ShipwreckMaxFishAmount = 100
 )

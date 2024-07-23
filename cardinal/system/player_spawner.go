@@ -108,7 +108,8 @@ func createPlayerData(world cardinal.WorldContext, nickname string) error {
 			Effects:   effects,
 		},
 		comp.ShipwreckResources{
-			Resources: shipWreckResources,
+			Resources:     &shipWreckResources,
+			LastSpawnTime: world.Timestamp(),
 		},
 		comp.Position{
 			Island:    islandCoordinates,

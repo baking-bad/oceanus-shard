@@ -104,6 +104,7 @@ var BuildingConfigs = map[BuildingType]BuildingConstants{
 				{Type: Fish, Amount: constants.ShipyardEffectRaftResourceFish},
 			},
 			BuildingTimeSeconds: constants.ShipyardEffectRaftBuildSeconds,
+			Speed:               constants.RaftTravelSpeedPerMinute,
 		},
 		TileType: CoastlineTile,
 	},
