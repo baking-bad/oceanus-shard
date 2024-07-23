@@ -23,14 +23,15 @@ func ShipwreckResourcesSpawner(world cardinal.WorldContext) error {
 				return true
 			}
 
-			shipWreckResources := make([]comp.Resource, len(comp.GetShipwreckResourceTypes()))
+			spawningShipWreckResources := make([]comp.Resource, len(comp.GetShipwreckResourceTypes()))
 			for i, resourceType := range comp.GetShipwreckResourceTypes() {
-				shipWreckResources[i] = comp.Resource{
+				spawningShipWreckResources[i] = comp.Resource{
 					Type:   resourceType,
 					Amount: comp.GetShipwreckDefaultResourceAmount(resourceType),
 				}
 			}
-			shipwreckResources.Resources = &shipWreckResources
+			shipwreckResources.Resources = &spawningShipWreckResources
+			shipwreckResources.LastSpawnTime = world.Timestamp()
 			_ = cardinal.SetComponent(world, id, shipwreckResources)
 			return true
 		})
