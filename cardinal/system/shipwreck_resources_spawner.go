@@ -16,7 +16,7 @@ func ShipwreckResourcesSpawner(world cardinal.WorldContext) error {
 		Each(world, func(id types.EntityID) bool {
 			shipwreckResources, _ := cardinal.GetComponent[comp.ShipwreckResources](world, id)
 			if (shipwreckResources.LastSpawnTime +
-				uint64(constants.ShipwreckResourcesRespawnInterval.Milliseconds())) < world.Timestamp() {
+				uint64(constants.ShipwreckResourcesRespawnInterval.Milliseconds())) > world.Timestamp() {
 				return true
 			}
 			if shipwreckResources.Resources != nil {
