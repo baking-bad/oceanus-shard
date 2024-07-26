@@ -42,9 +42,12 @@ func SailShip(world cardinal.WorldContext) error {
 
 			if buildingComponent.Effect.Position == playerPosition.Island {
 				buildingComponent.Effect.TargetPosition = nil
+				buildingComponent.Effect.SendingPosition = nil
 				_ = unloadShip(world, buildingComponent.Effect)
 			} else if buildingComponent.Effect.Position == *buildingComponent.Effect.TargetPosition {
+				previousTargetPosition := buildingComponent.Effect.TargetPosition
 				buildingComponent.Effect.TargetPosition = &playerPosition.Island
+				buildingComponent.Effect.SendingPosition = previousTargetPosition
 				_ = lootShipwreck(world, buildingComponent.Effect)
 			}
 
@@ -106,6 +109,9 @@ func lootShipwreck(world cardinal.WorldContext, effect *comp.Effect) error {
 }
 
 func unloadShip(world cardinal.WorldContext, effect *comp.Effect) error {
+	if effect.LootResources == nil {
+		return nil
+	}
 	playerResourcesID, playerResources, _ := QueryPlayerComponent[comp.PlayerResources](
 		world,
 		effect.Player,

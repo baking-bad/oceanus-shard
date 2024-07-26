@@ -85,6 +85,7 @@ func createSailData(
 	}
 	shipyardEffect := shipyard.Effect
 	shipyardEffect.TargetPosition = &targetPlayerPosition.Shipwreck
+	shipyardEffect.SendingPosition = &playerPosition.Island
 	err := updateEffect(world, shipyardEntityID, shipyard.Effect)
 	if err != nil {
 		return err
