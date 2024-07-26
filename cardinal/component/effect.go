@@ -34,6 +34,7 @@ type Effect struct {
 	Speed                 float64     `json:"speed"`
 	Position              [2]float64  `json:"position,omitempty"`
 	TargetPosition        *[2]float64 `json:"targetPosition,omitempty"`
+	SendingPosition       *[2]float64 `json:"sendingPosition,omitempty"`
 	BuildingTimeSeconds   int         `json:"buildingTimeSeconds,omitempty"`
 	BuildingTimeStartedAt uint64      `json:"buildingTimeStartedAt,omitempty"`
 }
