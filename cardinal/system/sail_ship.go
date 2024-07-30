@@ -101,6 +101,7 @@ func lootShipwreck(world cardinal.WorldContext, effect *comp.Effect) error {
 
 	effect.LootResources = shipwreckResources.Resources
 	shipwreckResources.Resources = nil
+	shipwreckResources.LastSpawnTime = world.Timestamp()
 	if err := cardinal.SetComponent(world, playerMapEntityID, shipwreckResources); err != nil {
 		return err
 	}
