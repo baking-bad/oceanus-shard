@@ -4,6 +4,7 @@ services:
     environment:
       - REDIS_ADDRESS=redis:6379
       - BASE_SHARD_SEQUENCER_ADDRESS=evm:9601
+      - CARDINAL_ROLLUP=true
     build:
       target: runtime
     depends_on:
@@ -146,10 +147,10 @@ services:
       - data:/redis
     networks:
       - world-engine
-    
+
   celestia-devnet:
     container_name: celestia-devnet
-    image: ghcr.io/rollkit/local-celestia-devnet:latest
+    image: ghcr.io/celestiaorg/celestia-node:v0.16.0
     networks:
       - world-engine
     restart: on-failure
@@ -158,14 +159,38 @@ services:
       interval: 1s
       timeout: 1s
       retries: 20
+    environment:
+      POSTGRES_USER: test
+    command:
+      bash -c "celestia light init --p2p.network arabica-11 && celestia light start --p2p.network arabica-11 --gateway.addr 0.0.0.0 --rpc.addr 0.0.0.0 --core.ip validator-1.celestia-arabica-11.com"
+    volumes:
+      - arabica:/home
+    expose:
+      - "26658"
     ports:
-      - "26657"
-      - "26658:26658"
-      - "26659:26659"
+      - 26658:26658
+      - 26659:26659
+      - 26656:26656
       - "9090"
+
+  balance-checker:
+    image: alpine:latest
+    container_name: balance_checker
+    volumes:
+      - ./check_balance.sh:/usr/local/bin/check_balance.sh
+    .env_file:
+      - .env
+    environment:
+      - ADDRESS=${ADDRESS}
+      - CHAIN_ID=${CHAIN_ID}
+      - THRESHOLD=${THRESHOLD}
+      - INTERVAL=${INTERVAL}
+    entrypoint: /bin/sh -c "apk add --no-cache bash curl jq && /usr/local/bin/check_balance.sh"
+    restart: always
 
 volumes:
   data:
+  arabica:
     
 networks:
   world-engine:
