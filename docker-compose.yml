@@ -178,7 +178,7 @@ services:
     container_name: balance_checker
     volumes:
       - ./check_balance.sh:/usr/local/bin/check_balance.sh
-    .env_file:
+    env_file:
       - .env
     environment:
       - ADDRESS=${ADDRESS}

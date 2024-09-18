@@ -10,7 +10,7 @@ while true; do
             -H "Content-Type: application/json" \
             -d "{\"address\":\"$ADDRESS\",\"chainId\":\"$CHAIN_ID\"}"
     else
-        echo "$(date '+%Y-%m-%d %H:%M:%S') Enough balance: $spendable"
+        echo "$(date '+%Y-%m-%d %H:%M:%S') Enough balance: $spendable > $THRESHOLD"
     fi
 
     sleep $INTERVAL
